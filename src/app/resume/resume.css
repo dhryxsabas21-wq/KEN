@@ -1,0 +1,440 @@
+/* ───────────────────────────────────────────────────────────
+   RÉSUMÉ SHEET
+   Print-first: real A4 dimensions in mm and type in pt, so the
+   screen view, the printout and the PDF are the same document.
+
+   On paper the copper accent is darkened to #A8482A — the site's
+   #E07A4B is only 2.9:1 on white, this is 5.8:1. Muted text #6B665E
+   is 5.6:1 on white. Everything clears WCAG AA.
+   ─────────────────────────────────────────────────────────── */
+
+.rs-stage {
+  min-height: calc(100dvh - 60px);
+  padding: 40px 16px 72px;
+  background: var(--color-ground);
+}
+
+.rs-sheet {
+  --paper: #ffffff;
+  --ink: #1a1917;
+  --ink-2: #3d3934;
+  --muted: #6b665e;
+  --accent: #a8482a;
+  --rule: #dbd5cb;
+
+  box-sizing: border-box;
+  width: 210mm;
+  min-height: 297mm;
+  margin: 0 auto;
+  padding: 15mm 15mm 13mm;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-inter), "Segoe UI", system-ui, sans-serif;
+  font-size: 9.5pt;
+  line-height: 1.5;
+  box-shadow:
+    0 40px 80px -30px rgb(0 0 0 / 0.75),
+    0 0 0 1px rgb(255 255 255 / 0.05);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.rs-sheet a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ── Header ── */
+
+.rs-name {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 400;
+  font-size: 34pt;
+  line-height: 0.95;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+
+.rs-role {
+  margin-top: 7pt;
+  font-family: var(--font-mono), monospace;
+  font-size: 8pt;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* Name and title on the left, contact details stacked on the right —
+   gives the long LinkedIn URL a full line instead of wrapping it. */
+.rs-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 8mm;
+}
+
+.rs-contact {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: baseline;
+  gap: 2.5pt 7pt;
+  margin: 0;
+}
+
+/* Each row's wrapper steps aside so dt/dd sit in the grid directly */
+.rs-contact > div {
+  display: contents;
+}
+
+.rs-contact dt {
+  justify-self: end;
+  font-family: var(--font-mono), monospace;
+  font-size: 6.5pt;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.rs-contact dd {
+  margin: 0;
+  font-size: 8.5pt;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.rs-rule {
+  position: relative;
+  height: 1px;
+  margin: 13pt 0 15pt;
+  background: var(--rule);
+}
+
+.rs-rule::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -2.5pt;
+  width: 5pt;
+  height: 5pt;
+  background: var(--accent);
+}
+
+/* ── Body: sidebar left, main right. Main comes FIRST in the DOM so
+      applicant-tracking systems and screen readers get the substance
+      first; grid areas put the sidebar on the left visually. ── */
+
+.rs-body {
+  display: grid;
+  grid-template-columns: 50mm 1fr;
+  grid-template-areas: "aside main";
+  column-gap: 8mm;
+}
+
+.rs-main {
+  grid-area: main;
+}
+
+.rs-aside {
+  grid-area: aside;
+  padding-right: 6mm;
+  border-right: 1px solid var(--rule);
+}
+
+.rs-section + .rs-section {
+  margin-top: 14pt;
+}
+
+.rs-h {
+  display: flex;
+  align-items: center;
+  gap: 6pt;
+  margin: 0 0 8pt;
+  font-family: var(--font-mono), monospace;
+  font-size: 7.5pt;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.rs-h::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+.rs-summary {
+  margin: 0;
+  color: var(--ink-2);
+}
+
+/* ── Entries ── */
+
+.rs-entry + .rs-entry {
+  margin-top: 11pt;
+}
+
+.rs-entry-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10pt;
+}
+
+.rs-entry-title {
+  margin: 0;
+  font-size: 10pt;
+  font-weight: 650;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.rs-period {
+  flex-shrink: 0;
+  font-family: var(--font-mono), monospace;
+  font-size: 7.5pt;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  color: var(--muted);
+}
+
+.rs-org {
+  margin: 1.5pt 0 0;
+  font-size: 8.75pt;
+  color: var(--ink-2);
+}
+
+.rs-org .rs-sep {
+  margin: 0 4pt;
+  color: var(--rule);
+}
+
+.rs-bullets {
+  margin: 5pt 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rs-bullets li {
+  position: relative;
+  padding-left: 11pt;
+  color: var(--ink-2);
+}
+
+.rs-bullets li + li {
+  margin-top: 2.5pt;
+}
+
+.rs-bullets li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.68em;
+  width: 5pt;
+  height: 1pt;
+  background: var(--accent);
+}
+
+.rs-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3pt;
+  margin: 6pt 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rs-chips li {
+  padding: 1.5pt 4.5pt;
+  border: 1px solid var(--rule);
+  font-family: var(--font-mono), monospace;
+  font-size: 6.5pt;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.rs-current {
+  margin-left: 5pt;
+  font-family: var(--font-mono), monospace;
+  font-size: 6.5pt;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* ── Sidebar ── */
+
+.rs-group + .rs-group {
+  margin-top: 9pt;
+}
+
+.rs-group-label {
+  margin: 0 0 2.5pt;
+  font-family: var(--font-mono), monospace;
+  font-size: 6.5pt;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.rs-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 9pt;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+.rs-list li {
+  position: relative;
+  padding-left: 9pt;
+}
+
+.rs-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 3pt;
+  height: 3pt;
+  background: var(--accent);
+}
+
+.rs-note {
+  margin: 0;
+  font-size: 8.75pt;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+/* ── Phones and tablets, on SCREEN only. Scoped to `screen` on
+      purpose: when printing, the viewport is the 210mm page (≈794px),
+      which would otherwise trigger this layout on paper. ── */
+
+@media screen and (max-width: 860px) {
+  .rs-stage {
+    padding: 16px 12px 48px;
+  }
+
+  .rs-sheet {
+    width: 100%;
+    min-height: 0;
+    padding: 28px 22px;
+    font-size: 14px;
+  }
+
+  .rs-name {
+    font-size: 40px;
+  }
+
+  .rs-header {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .rs-contact {
+    grid-template-columns: auto 1fr;
+    gap: 6px 12px;
+  }
+
+  .rs-contact dt {
+    justify-self: start;
+  }
+
+  .rs-contact dd {
+    font-size: 13px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .rs-body {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "main"
+      "aside";
+  }
+
+  .rs-aside {
+    margin-top: 22px;
+    padding: 20px 0 0;
+    border-right: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .rs-list,
+  .rs-note,
+  .rs-org {
+    font-size: 13px;
+  }
+
+  .rs-entry-title {
+    font-size: 15px;
+  }
+
+  .rs-period,
+  .rs-chips li,
+  .rs-current,
+  .rs-group-label,
+  .rs-contact dt,
+  .rs-h {
+    font-size: 10.5px;
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .rs-contact {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+  .rs-contact dd + dt {
+    margin-top: 8px;
+  }
+
+  .rs-entry-head {
+    flex-direction: column;
+    gap: 2px;
+  }
+}
+
+/* ── Print / PDF ── */
+
+@page {
+  size: A4;
+  margin: 0;
+}
+
+@media print {
+  html,
+  body {
+    background: #ffffff !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .rs-stage {
+    min-height: 0;
+    padding: 0;
+    background: #ffffff;
+  }
+
+  .rs-sheet {
+    width: 210mm;
+    /* Just under one A4 page: if content ever outgrows it, a second
+       page appears and `npm run resume:pdf` fails loudly, instead of
+       the bottom being silently clipped. */
+    min-height: 296mm;
+    margin: 0;
+    box-shadow: none;
+  }
+}

@@ -1,0 +1,569 @@
+@import "tailwindcss";
+
+/* ───────────────────────────────────────────────────────────
+   WARM DARK EDITORIAL
+   Charcoal ground, cream type, one copper accent.
+
+   Contrast against ground-2 (#1F1C19), the lighter of the two
+   grounds and so the worst case:
+     ink 14.6:1 · ink-2 8.4:1 · muted 4.9:1 · pigment 5.7:1
+   All clear WCAG AA for normal text.
+
+   Layering matters: Tailwind v4 puts utilities in @layer utilities,
+   and UNLAYERED css beats every layer. Custom classes therefore live
+   in @layer components, or utilities like leading-[0.82] silently
+   lose to them.
+   ─────────────────────────────────────────────────────────── */
+@theme {
+  --color-ground: #181614;
+  --color-ground-2: #1f1c19;
+  --color-surface: #27231f;
+  --color-ink: #ede6da;
+  --color-ink-2: #bdb4a6;
+  --color-muted: #918878;
+  --color-pigment: #e07a4b;
+  --color-pigment-deep: #6e341b;
+
+  --color-hair: rgb(237 230 218 / 0.13);
+
+  --font-display: var(--font-instrument-serif), Georgia, serif;
+  --font-mono: var(--font-azeret-mono), ui-monospace, monospace;
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ───────────────────────────── Base ───────────────────────────── */
+
+@layer base {
+  html {
+    background-color: var(--color-ground);
+    color-scheme: dark;
+    scroll-behavior: smooth;
+    /* Nav (60px) plus the section bar (52px) below md */
+    scroll-padding-top: 112px;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (min-width: 768px) {
+    html {
+      scroll-padding-top: 60px;
+    }
+  }
+
+  body {
+    background-color: var(--color-ground);
+    color: var(--color-ink);
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* Square corners, no exceptions — including buttons */
+  *,
+  *::before,
+  *::after {
+    border-radius: 0;
+  }
+
+  ::selection {
+    background-color: var(--color-pigment);
+    color: var(--color-ground);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-pigment);
+    outline-offset: 3px;
+  }
+}
+
+/* ─────────────────────────── Components ─────────────────────────── */
+
+@layer components {
+  .display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    line-height: 1.04;
+  }
+
+  .display-em {
+    font-style: italic;
+    color: var(--color-pigment);
+  }
+
+  .label {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+
+  .label-lg {
+    font-size: 12.5px;
+    letter-spacing: 0.15em;
+  }
+
+  .copy {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    line-height: 1.75;
+    color: var(--color-ink-2);
+  }
+
+  .hair-t {
+    border-top: 1px solid var(--color-hair);
+  }
+
+  /* ── 3D buttons ──────────────────────────────────────────────────
+     A hard offset "slab" sits under each button. Hover lifts the face
+     off the slab; press pushes it down onto it. Only transform and
+     box-shadow animate, so nothing around the button reflows. */
+  .btn {
+    --slab: var(--color-ink-2);
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6em;
+    min-height: 44px;
+    padding: 0 1.4rem;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    border: 1px solid var(--color-ink);
+    color: var(--color-ink);
+    background: var(--color-ground-2);
+    box-shadow: 3px 3px 0 0 var(--slab);
+    transform: translate(0, 0);
+    transition:
+      transform 180ms var(--ease-out-soft),
+      box-shadow 180ms var(--ease-out-soft),
+      background-color 220ms var(--ease-out-soft),
+      color 220ms var(--ease-out-soft);
+  }
+
+  .btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 0 var(--slab);
+    background-color: var(--color-ink);
+    color: var(--color-ground);
+  }
+
+  .btn:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 0 var(--slab);
+    transition-duration: 60ms;
+  }
+
+  .btn-pigment {
+    --slab: var(--color-pigment-deep);
+    border-color: var(--color-pigment);
+    color: var(--color-pigment);
+  }
+
+  .btn-pigment:hover {
+    background-color: var(--color-pigment);
+    color: var(--color-ground);
+  }
+
+  /* ── Work screenshots: a frame on a copper slab ── */
+  .screen {
+    overflow: hidden;
+    border: 1px solid var(--color-hair);
+    background: var(--color-surface);
+    box-shadow:
+      10px 10px 0 0 var(--color-pigment-deep),
+      0 40px 80px -30px rgb(0 0 0 / 0.7);
+  }
+
+  .screen-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    height: 34px;
+    padding: 0 12px;
+    border-bottom: 1px solid var(--color-hair);
+    background: #2c2823;
+  }
+
+  .screen-bar i {
+    display: block;
+    width: 9px;
+    height: 9px;
+    background: var(--color-muted);
+    opacity: 0.6;
+  }
+
+  .screen-url {
+    flex: 1;
+    min-width: 0;
+    height: 20px;
+    padding: 0 10px;
+    overflow: hidden;
+    background: var(--color-ground);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 20px;
+    letter-spacing: 0.04em;
+    color: var(--color-muted);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  /* ── Contact channel cards: same slab-and-lift as the buttons ── */
+  .channel {
+    display: block;
+    min-height: 96px;
+    padding: 1.1rem 1.25rem 1.25rem;
+    border: 1px solid var(--color-hair);
+    background: var(--color-ground-2);
+    box-shadow: 0 0 0 0 var(--color-pigment-deep);
+    transition:
+      transform 200ms var(--ease-out-soft),
+      box-shadow 200ms var(--ease-out-soft),
+      border-color 200ms var(--ease-out-soft);
+  }
+
+  .channel:hover,
+  .channel:focus-visible {
+    transform: translate(-3px, -3px);
+    box-shadow: 5px 5px 0 0 var(--color-pigment-deep);
+    border-color: var(--color-pigment);
+  }
+
+  .channel:active {
+    transform: translate(1px, 1px);
+    box-shadow: 0 0 0 0 var(--color-pigment-deep);
+    transition-duration: 60ms;
+  }
+
+  /* ── Nav link underline ── */
+  .navlink {
+    position: relative;
+  }
+
+  .navlink::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -4px;
+    height: 1px;
+    background-color: var(--color-pigment);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 260ms var(--ease-out-soft);
+  }
+
+  .navlink:hover::after,
+  .navlink[data-current="true"]::after {
+    transform: scaleX(1);
+  }
+
+  /* ── Hero portrait ─────────────────────────────────────────────
+     Side by side (≥1024px) the frame takes the exact height of the
+     copy column — the grid row is sized by the copy and the portrait
+     stretches to it — so the photo's top edge lines up with the first
+     line of text and its bottom edge with the last. Width is fixed, so
+     the copy's height never depends on the portrait (no layout loop).
+     Stacked (<1024px) it is a centred 4:5 frame.
+
+     The photo fills the frame (object-fit: cover), anchored to the top
+     with ~7% headroom, so the head is never cramped or cut. */
+  .hero-portrait {
+    width: min(78vw, 340px);
+  }
+
+  .portrait-frame {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    transform-style: preserve-3d;
+  }
+
+  @media (min-width: 1024px) {
+    .hero-portrait {
+      width: min(40vw, 420px);
+      height: 100%;
+    }
+    .portrait-frame {
+      aspect-ratio: auto;
+      height: 100%;
+    }
+  }
+
+  .portrait-bg {
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--color-hair);
+    background:
+      radial-gradient(90% 60% at 50% 30%, rgb(224 122 75 / 0.22), transparent 70%),
+      var(--color-surface);
+    box-shadow: 10px 10px 0 0 var(--color-pigment-deep);
+  }
+
+  /* The photo layer sits in front of the frame plane, so it shears
+     against it when the portrait tilts. */
+  .portrait-photo {
+    position: absolute;
+    inset: 1px;
+    overflow: hidden;
+    transform: translateZ(30px);
+  }
+
+  .portrait-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding-top: 7%;
+    object-fit: cover;
+    object-position: 50% 0%;
+  }
+
+  .portrait-corner {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border: 0 solid var(--color-pigment);
+    transform: translateZ(20px);
+  }
+  .portrait-corner.tl { top: -7px; left: -7px; border-width: 2px 0 0 2px; }
+  .portrait-corner.tr { top: -7px; right: -7px; border-width: 2px 2px 0 0; }
+  .portrait-corner.bl { bottom: -7px; left: -7px; border-width: 0 0 2px 2px; }
+  .portrait-corner.br { bottom: -7px; right: -7px; border-width: 0 2px 2px 0; }
+
+  /* ── WebGL paper field ─────────────────────────────────────────
+     Its BOX is the guarantee that no sheet ever sits behind text.
+     Side-by-side (≥1024px): the box starts where the copy column ends,
+     computed from the same numbers as the layout — centred 1340px
+     container, 40px gutter, min(40vw, 560px) column — plus 24px.
+     Stacked (<1024px): only a band at the bottom around the portrait,
+     sized from the same width formula as .hero-portrait. */
+  .paper-field {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: calc(max(0px, (100% - 1340px) / 2) + 40px + min(40vw, 560px) + 24px);
+    mask-image: linear-gradient(90deg, transparent 0%, black 30%);
+  }
+
+  @media (max-width: 1023px) {
+    .paper-field {
+      left: 0;
+      top: auto;
+      height: calc(min(78vw, 340px) * 1.25 + 56px);
+      mask-image: linear-gradient(180deg, transparent 0%, black 35%);
+    }
+  }
+
+  /* ── Extruded type ─────────────────────────────────────────────
+     Stacked hard shadows read as a solid block of letterform with
+     depth, stepping down-right into the copper. */
+  .extrude {
+    text-shadow:
+      1px 1px 0 #5a2c18,
+      2px 2px 0 #5a2c18,
+      3px 3px 0 #552a17,
+      4px 4px 0 #4f2716,
+      5px 5px 0 #4a2515,
+      6px 6px 0 #452213,
+      7px 7px 0 #402012,
+      8px 8px 0 #3a1d10,
+      9px 9px 0 #351b0f,
+      10px 10px 0 #30180e,
+      12px 14px 24px rgb(0 0 0 / 0.55);
+  }
+
+  /* ── Stack flip tiles ──────────────────────────────────────────
+     A two-sided card in real 3D. Both faces stay in the DOM, so a
+     screen reader reads front and back regardless of which is shown;
+     backface-visibility only hides the far side visually.
+     Flips on hover (pointer devices), on keyboard focus, and on
+     tap/click (aria-pressed), so it never depends on hover alone. */
+  .tile {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 210px;
+    perspective: 900px;
+    text-align: left;
+    cursor: pointer;
+    transition: transform 300ms var(--ease-out-soft);
+  }
+
+  .tile-inner {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transition: transform 760ms var(--ease-out-soft);
+  }
+
+  .tile-face {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.25rem;
+    border: 1px solid var(--color-hair);
+    background: var(--color-ground-2);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  .tile-back {
+    transform: rotateY(180deg);
+    border-color: var(--color-pigment);
+    background: var(--color-surface);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .tile:hover {
+      transform: translateY(-4px);
+    }
+    .tile:hover .tile-inner {
+      transform: rotateY(180deg);
+    }
+  }
+
+  .tile:focus-visible .tile-inner,
+  .tile[aria-pressed="true"] .tile-inner {
+    transform: rotateY(180deg);
+  }
+
+  /* ── Work table ── */
+  .worktable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .worktable th {
+    text-align: left;
+    padding: 0 1.5rem 0.75rem 0;
+    border-bottom: 1px solid var(--color-hair);
+    color: var(--color-muted);
+  }
+
+  .worktable td {
+    padding: 1.5rem 1.5rem 1.5rem 0;
+    border-bottom: 1px solid var(--color-hair);
+    vertical-align: top;
+  }
+
+  .worktable th:last-child,
+  .worktable td:last-child {
+    padding-right: 0;
+  }
+
+  /* Project name lifts off the page in 3D when its row is hovered */
+  .worktable .lift {
+    display: inline-block;
+    transform-origin: left bottom;
+    transition:
+      transform 420ms var(--ease-out-soft),
+      color 220ms var(--ease-out-soft),
+      text-shadow 420ms var(--ease-out-soft);
+  }
+
+  .worktable tr:hover .lift,
+  .worktable tr:focus-within .lift {
+    color: var(--color-pigment);
+    transform: perspective(600px) rotateX(24deg) translateZ(18px);
+    text-shadow:
+      0 1px 0 #6e341b,
+      0 2px 0 #63301a,
+      0 3px 0 #582b17,
+      0 4px 0 #4d2614,
+      0 10px 18px rgb(0 0 0 / 0.5);
+  }
+
+  @media (max-width: 820px) {
+    .worktable thead {
+      display: none;
+    }
+    .worktable,
+    .worktable tbody,
+    .worktable tr {
+      display: block;
+      width: 100%;
+    }
+    .worktable tr {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 0.75rem 1.25rem;
+      border-bottom: 1px solid var(--color-hair);
+      padding: 1.5rem 0;
+    }
+    .worktable td {
+      display: block;
+      border: none;
+      padding: 0;
+    }
+    .worktable td:nth-child(2),
+    .worktable td:nth-child(3) {
+      grid-column: 1 / -1;
+    }
+    .worktable td:nth-child(4) {
+      grid-row: 1;
+      grid-column: 2;
+    }
+  }
+}
+
+/* ─────────────────────── Reveal grammar (3D) ───────────────────────
+   Blocks swing up into place from a backward tilt, like a page being
+   lifted toward you. `data-reveal="flip"` swings further, for ruled
+   rows that read as index cards.
+
+   Only applies under `.anim`, which the head script adds solely when
+   prefers-reduced-motion is NOT set. With no JS, or reduced motion,
+   nothing is ever hidden. */
+
+.anim [data-reveal] {
+  opacity: 0;
+  transform: perspective(900px) rotateX(-26deg) translateY(22px);
+  transform-origin: 50% 0%;
+  transition:
+    opacity 760ms var(--ease-out-soft),
+    transform 900ms var(--ease-out-soft);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.anim [data-reveal="flip"] {
+  transform: perspective(700px) rotateX(-78deg);
+}
+
+.anim [data-reveal][data-shown="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .worktable tr:hover .lift,
+  .worktable tr:focus-within .lift {
+    transform: none;
+  }
+}
