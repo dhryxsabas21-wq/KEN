@@ -164,8 +164,11 @@ In headless Chrome against the production build:
 
 ## Deploying
 
-The code lives on GitHub at **github.com/dhryxsabas21-wq/KEN**, and Vercel builds the site from
-it. **Every push to `main` redeploys the live site automatically** (about a minute).
+**Live site: https://ken-975q-theta.vercel.app**
+
+The code lives on GitHub at **github.com/dhryxsabas21-wq/KEN**, and the Vercel project
+**`ken-975q`** builds the site from it. **Every push to `main` redeploys the live site
+automatically** (about a minute).
 
 To publish a change:
 
