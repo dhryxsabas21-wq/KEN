@@ -250,6 +250,10 @@ export const work: WorkRow[] = [
     year: "2025 — 2026",
     note:
       "Registration and cashiering system for the Lyceum of the East-Aurora. Students register once, choose the subjects their curriculum lists for the term, see exactly how their fees were computed, and keep every Official Receipt on record — while the Office of the Registrar reviews every application.",
+    live: {
+      href: "https://leaportal.gt.tc/",
+      label: "leaportal.gt.tc",
+    },
     featured: {
       image: {
         src: "/work/lyceum-student-portal.png",
@@ -258,7 +262,7 @@ export const work: WorkRow[] = [
         alt: "Lyceum of the East-Aurora student portal home page, headed 'Enroll, get assessed and pay, all in one place', with the enrollment period card showing 1st Semester, school year 2025–2026, enrollment open.",
       },
       chrome: "browser",
-      chromeTitle: "Lyceum of the East-Aurora — Registration and Cashiering",
+      chromeTitle: "leaportal.gt.tc",
       features: [
         "Student registration & accounts",
         "Registrar review of applications",
