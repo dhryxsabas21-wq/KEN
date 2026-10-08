@@ -74,7 +74,7 @@ for (const [engine, browserType, launchOptions, profiles] of [
         await page.waitForTimeout(300);
         assert.equal(await page.evaluate(() => window.__motionFrames), stopped, `${name}: reduced motion stops animation callbacks`);
         await page.emulateMedia({ reducedMotion: "no-preference" });
-        await page.waitForTimeout(1100);
+        await page.waitForFunction(() => Number(document.querySelector(".hero-portrait").style.transform.match(/rotateX\(([-\d.]+)deg\)/)?.[1] || 0) < -0.5, null, { timeout: 10000 });
         assert((await tilt(page)).x < -0.5, `${name}: effects resume after preference change`);
 
         // A mobile toolbar height change and a portrait/landscape rotation.
@@ -126,10 +126,11 @@ for (const [engine, browserType, launchOptions, profiles] of [
         // An initial reduced-motion visit must also be able to resume effects.
         await page.emulateMedia({ reducedMotion: "reduce" });
         await page.goto(base, { waitUntil: "networkidle" });
+        await page.evaluate(() => document.fonts.ready);
         await place(page, ".hero-portrait", 0.7);
         assert.equal((await tilt(page)).transform, "");
         await page.emulateMedia({ reducedMotion: "no-preference" });
-        await page.waitForTimeout(1100);
+        await page.waitForFunction(() => Number(document.querySelector(".hero-portrait").style.transform.match(/rotateX\(([-\d.]+)deg\)/)?.[1] || 0) > 1, null, { timeout: 10000 });
         assert((await tilt(page)).x > 1, `${name}: resume from initial reduced motion`);
         assert.deepEqual(errors, [], `${name}: no runtime errors`);
         console.log(`PASS: ${engine} ${name}: scroll/light, rotation, taps, reduced motion, idle, reveals`);
