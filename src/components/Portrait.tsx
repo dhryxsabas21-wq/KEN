@@ -1,19 +1,20 @@
 import Image from "next/image";
-import { subject } from "@/lib/content";
+import { profile, subject } from "@/lib/content";
 import Tilt3D from "./Tilt3D";
 
 /**
- * The hero portrait: the photo fully inside its frame, the frame's top
- * and bottom edges level with the copy column beside it (see
- * .hero-portrait in globals.css). Three depth planes — frame, corner
- * marks, photo — plus a status chip in front, so it shears in real 3D
- * when it tilts toward the pointer (or with scroll on touch screens).
+ * A stable 4:5 portrait with the complete photo aligned to the bottom.
+ * The backplate, photo, and floating details occupy separate depth planes.
  */
 export default function Portrait() {
   return (
-    <Tilt3D max={8} perspective={1100} className="hero-portrait relative">
+    <div className="portrait-stage">
+    <div aria-hidden="true" className="portrait-orbit" />
+    <Tilt3D max={9} perspective={1200} className="hero-portrait relative">
+      <div aria-hidden="true" className="portrait-backplate" />
       <div className="portrait-frame">
-        <div className="portrait-bg" />
+        <div aria-hidden="true" className="portrait-bg" />
+        <div aria-hidden="true" className="portrait-grid" />
 
         <span aria-hidden="true" className="portrait-corner tl" />
         <span aria-hidden="true" className="portrait-corner tr" />
@@ -27,23 +28,32 @@ export default function Portrait() {
               width={subject.width}
               height={subject.height}
               alt={subject.alt}
-              sizes="(min-width: 1024px) 420px, 340px"
+              sizes="(min-width: 1024px) 400px, (min-width: 480px) 340px, 78vw"
               preload
               className="portrait-img"
               draggable={false}
             />
           </div>
         )}
+        <div aria-hidden="true" className="portrait-shine" />
+        <div className="portrait-caption">
+          <span className="label">{profile.firstName} {profile.lastName}</span>
+          <span className="label text-pigment">Developer</span>
+        </div>
       </div>
-
-      {/* Status chip, floating in front of everything */}
+      <div className="portrait-note" aria-hidden="true">
+        <span className="portrait-code">&lt;/&gt;</span>
+        <span className="label">From idea<br /><span className="text-ink-2">to working software.</span></span>
+      </div>
       <p
-        className="label absolute -bottom-4 left-5 flex items-center gap-2 border border-hair bg-ground px-3 py-2 text-ink"
+        className="label portrait-status"
         style={{ transform: "translateZ(60px)" }}
       >
-        <span aria-hidden="true" className="h-1.5 w-1.5 bg-pigment" />
+        <span aria-hidden="true" />
         Available for projects
       </p>
     </Tilt3D>
+    <p className="label portrait-hint text-muted"><span aria-hidden="true">✧</span> A little perspective changes everything.</p>
+    </div>
   );
 }

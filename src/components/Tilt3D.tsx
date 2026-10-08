@@ -41,7 +41,8 @@ export default function Tilt3D({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (motionPreference.matches) return;
 
     const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
     const usePointer = mode === "pointer" && finePointer;
@@ -54,7 +55,19 @@ export default function Tilt3D({
 
     const apply = () => {
       el.style.transform = `perspective(${perspective}px) rotateX(${rx.toFixed(3)}deg) rotateY(${ry.toFixed(3)}deg)`;
+      el.style.setProperty("--light-x", `${50 + ry * 4}%`);
+      el.style.setProperty("--light-y", `${35 - rx * 4}%`);
     };
+    const onMotionChange = () => {
+      if (!motionPreference.matches) return;
+      cancelAnimationFrame(raf);
+      raf = 0;
+      rx = ry = trx = try_ = 0;
+      el.style.transform = "";
+      el.style.removeProperty("--light-x");
+      el.style.removeProperty("--light-y");
+    };
+    motionPreference.addEventListener("change", onMotionChange);
 
     // Ease toward the target; stop the loop once settled.
     const tick = () => {
@@ -76,14 +89,16 @@ export default function Tilt3D({
 
     if (usePointer) {
       const onMove = (e: PointerEvent) => {
+        if (motionPreference.matches) return;
         const r = el.getBoundingClientRect();
-        const px = (e.clientX - r.left) / r.width - 0.5;
-        const py = (e.clientY - r.top) / r.height - 0.5;
+        const px = Math.max(-0.5, Math.min(0.5, (e.clientX - r.left) / r.width - 0.5));
+        const py = Math.max(-0.5, Math.min(0.5, (e.clientY - r.top) / r.height - 0.5));
         trx = -py * max * 2;
         try_ = px * max * 2;
         kick();
       };
       const onLeave = () => {
+        if (motionPreference.matches) return;
         trx = 0;
         try_ = 0;
         kick();
@@ -94,12 +109,14 @@ export default function Tilt3D({
         cancelAnimationFrame(raf);
         el.removeEventListener("pointermove", onMove);
         el.removeEventListener("pointerleave", onLeave);
+        motionPreference.removeEventListener("change", onMotionChange);
       };
     }
 
     // Scroll-driven: tilted back while below the middle of the screen,
     // flat as it crosses the middle, tilted forward above it.
     const onScroll = () => {
+      if (motionPreference.matches) return;
       const r = el.getBoundingClientRect();
       const vh = window.innerHeight;
       const offset = (r.top + r.height / 2 - vh / 2) / (vh / 2);
@@ -114,6 +131,7 @@ export default function Tilt3D({
       cancelAnimationFrame(raf);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
+      motionPreference.removeEventListener("change", onMotionChange);
     };
   }, [max, mode, perspective]);
 
