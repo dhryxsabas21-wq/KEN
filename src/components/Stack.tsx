@@ -68,8 +68,8 @@ export default function Stack() {
             className="label text-muted"
             style={{ "--reveal-delay": "140ms" } as React.CSSProperties}
           >
-            <span className="max-md:hidden">Hover</span>
-            <span className="md:hidden">Tap</span> a tile to see where it&apos;s used
+            <span className="tile-hover-hint">Hover or click</span>
+            <span className="tile-touch-hint">Tap</span> a tile to see where it&apos;s used
           </p>
         </div>
 

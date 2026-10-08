@@ -143,6 +143,35 @@ How it stays fast and safe:
 
 ## What was verified
 
+### Mobile effects
+
+Touch devices use scroll position for the portrait, project frames, and service
+panels, including the moving portrait light. Mouse devices retain pointer tilt.
+The easing uses elapsed time, so it has the same duration across refresh rates.
+Effects update on orientation and visible viewport changes, pause offscreen or
+when the tab is hidden, and respond to reduced-motion changes without a reload.
+Tiles flip on repeated taps or keyboard activation; hover styling and instructions
+are limited to devices with a fine, hover-capable pointer.
+
+Run the browser regressions against a production server:
+
+```powershell
+npm run build
+npm run start -- --port 3100
+# In a second terminal:
+node scripts/preview-check.mjs http://127.0.0.1:3100
+$env:PLAYWRIGHT_BROWSERS_PATH = Join-Path (Get-Location) '.preview/browsers'
+node node_modules/playwright-core/cli.js install webkit
+node scripts/mobile-effects-check.mjs http://127.0.0.1:3100
+```
+
+The mobile checks cover Android profiles in Chromium and iPhone/iPad profiles in
+WebKit: scroll tilt and light, portrait/landscape layouts, tile taps, reduced motion
+at load and while browsing, idle animation callbacks, and fast-scroll reveals.
+These are browser emulations, not tests on physical phones.
+
+### Original layout checks
+
 In headless Chrome against the production build:
 
 - **Hero, 9 viewports** (375×667 to 1920×1080, incl. 1280×600 and 1600×560): hero fills the window

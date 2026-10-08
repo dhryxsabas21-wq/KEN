@@ -52,7 +52,8 @@ export default function Reveal() {
     const check = () => {
       frame = 0;
       // The line a block's top must cross: 8% above the bottom edge.
-      const line = window.innerHeight * 0.92;
+      const viewport = window.visualViewport;
+      const line = (viewport?.offsetTop ?? 0) + (viewport?.height ?? window.innerHeight) * 0.92;
 
       // All reads first, then all writes — no layout thrash.
       const due: HTMLElement[] = [];
@@ -73,10 +74,14 @@ export default function Reveal() {
     const detach = () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
+      window.visualViewport?.removeEventListener("resize", onScroll);
+      window.removeEventListener("pageshow", onScroll);
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll, { passive: true });
+    window.visualViewport?.addEventListener("resize", onScroll, { passive: true });
+    window.addEventListener("pageshow", onScroll);
     const raf2 = requestAnimationFrame(check);
 
     return () => {

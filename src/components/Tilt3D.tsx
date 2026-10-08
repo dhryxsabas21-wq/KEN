@@ -42,10 +42,11 @@ export default function Tilt3D({
     const el = ref.current;
     if (!el) return;
     const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (motionPreference.matches) return;
-
-    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-    const usePointer = mode === "pointer" && finePointer;
+    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+    let usePointer = mode === "pointer" && finePointer.matches;
+    let inView = false;
+    let dirty = true;
+    let lastTime = 0;
 
     let rx = 0;
     let ry = 0;
@@ -58,80 +59,136 @@ export default function Tilt3D({
       el.style.setProperty("--light-x", `${50 + ry * 4}%`);
       el.style.setProperty("--light-y", `${35 - rx * 4}%`);
     };
-    const onMotionChange = () => {
-      if (!motionPreference.matches) return;
+    const stop = () => {
       cancelAnimationFrame(raf);
       raf = 0;
+      lastTime = 0;
+      el.style.removeProperty("will-change");
+    };
+    const reset = () => {
+      stop();
       rx = ry = trx = try_ = 0;
       el.style.transform = "";
       el.style.removeProperty("--light-x");
       el.style.removeProperty("--light-y");
     };
-    motionPreference.addEventListener("change", onMotionChange);
+
+    // Layout coordinates do not include our transform (or a parent's reveal).
+    // Reading a transformed bounding box here creates feedback while scrolling.
+    const layoutPosition = () => {
+      let top = 0;
+      let left = 0;
+      for (let node: HTMLElement | null = el; node; node = node.offsetParent as HTMLElement | null) {
+        top += node.offsetTop;
+        left += node.offsetLeft;
+      }
+      return { top: top - window.scrollY, left: left - window.scrollX };
+    };
+    const scrollTarget = () => {
+      const viewport = window.visualViewport;
+      const height = viewport?.height ?? window.innerHeight;
+      const center = (viewport?.offsetTop ?? 0) + height / 2;
+      const offset = Math.max(-1, Math.min(1, (layoutPosition().top + el.offsetHeight / 2 - center) / (height / 2)));
+      trx = offset * max;
+      // Give touch screens the same depth and moving light as pointer input.
+      try_ = mode === "pointer" ? -offset * max * 0.4 : 0;
+    };
 
     // Ease toward the target; stop the loop once settled.
-    const tick = () => {
-      rx += (trx - rx) * 0.12;
-      ry += (try_ - ry) * 0.12;
+    const tick = (time: number) => {
+      if (dirty && !usePointer) scrollTarget();
+      dirty = false;
+      // Same easing duration on 60 Hz, 90 Hz and 120 Hz screens.
+      const delta = lastTime ? time - lastTime : 1000 / 60;
+      lastTime = time;
+      const ease = 1 - Math.exp(-delta / 130);
+      rx += (trx - rx) * ease;
+      ry += (try_ - ry) * ease;
       apply();
       if (Math.abs(trx - rx) > 0.01 || Math.abs(try_ - ry) > 0.01) {
         raf = requestAnimationFrame(tick);
       } else {
-        raf = 0;
+        stop();
         // Settled flat: drop the transform entirely, so the box is back
         // to its exact untransformed geometry with no residual perspective.
         if (trx === 0 && try_ === 0) el.style.transform = "";
       }
     };
     const kick = () => {
-      if (!raf) raf = requestAnimationFrame(tick);
+      if (!raf && inView && !document.hidden && !motionPreference.matches) {
+        el.style.willChange = "transform";
+        raf = requestAnimationFrame(tick);
+      }
     };
 
-    if (usePointer) {
-      const onMove = (e: PointerEvent) => {
-        if (motionPreference.matches) return;
-        const r = el.getBoundingClientRect();
-        const px = Math.max(-0.5, Math.min(0.5, (e.clientX - r.left) / r.width - 0.5));
-        const py = Math.max(-0.5, Math.min(0.5, (e.clientY - r.top) / r.height - 0.5));
-        trx = -py * max * 2;
-        try_ = px * max * 2;
-        kick();
-      };
-      const onLeave = () => {
-        if (motionPreference.matches) return;
-        trx = 0;
-        try_ = 0;
-        kick();
-      };
-      el.addEventListener("pointermove", onMove);
-      el.addEventListener("pointerleave", onLeave);
-      return () => {
-        cancelAnimationFrame(raf);
-        el.removeEventListener("pointermove", onMove);
-        el.removeEventListener("pointerleave", onLeave);
-        motionPreference.removeEventListener("change", onMotionChange);
-      };
-    }
-
-    // Scroll-driven: tilted back while below the middle of the screen,
-    // flat as it crosses the middle, tilted forward above it.
     const onScroll = () => {
-      if (motionPreference.matches) return;
-      const r = el.getBoundingClientRect();
-      const vh = window.innerHeight;
-      const offset = (r.top + r.height / 2 - vh / 2) / (vh / 2);
-      trx = Math.max(-1, Math.min(1, offset)) * max;
-      try_ = 0;
+      dirty = true;
+      if (!usePointer) kick();
+    };
+    const onMove = (event: PointerEvent) => {
+      if (mode !== "pointer" || motionPreference.matches) return;
+      usePointer = event.pointerType !== "touch" && finePointer.matches;
+      if (!usePointer) {
+        onScroll();
+        return;
+      }
+      const position = layoutPosition();
+      const px = Math.max(-0.5, Math.min(0.5, (event.clientX - position.left) / el.offsetWidth - 0.5));
+      const py = Math.max(-0.5, Math.min(0.5, (event.clientY - position.top) / el.offsetHeight - 0.5));
+      trx = -py * max * 2;
+      try_ = px * max * 2;
       kick();
     };
-    onScroll();
+    const onLeave = () => {
+      if (!usePointer) return;
+      trx = try_ = 0;
+      kick();
+    };
+    const onPreference = () => {
+      reset();
+      usePointer = mode === "pointer" && finePointer.matches;
+      onScroll();
+    };
+    const onVisibility = () => {
+      if (document.hidden) stop();
+      else { dirty = true; kick(); }
+    };
+    const observer = new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting;
+      if (inView) { dirty = true; kick(); }
+      else stop();
+    });
+    observer.observe(el);
+    const resize = new ResizeObserver(onScroll);
+    resize.observe(el);
+    el.addEventListener("pointerdown", onMove, { passive: true });
+    el.addEventListener("pointermove", onMove, { passive: true });
+    el.addEventListener("pointerleave", onLeave);
+    el.addEventListener("pointercancel", onLeave);
+    motionPreference.addEventListener("change", onPreference);
+    finePointer.addEventListener("change", onPreference);
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll, { passive: true });
+    window.visualViewport?.addEventListener("resize", onScroll, { passive: true });
+    window.visualViewport?.addEventListener("scroll", onScroll, { passive: true });
+    document.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener("pageshow", onVisibility);
     return () => {
-      cancelAnimationFrame(raf);
+      reset();
+      observer.disconnect();
+      resize.disconnect();
+      el.removeEventListener("pointerdown", onMove);
+      el.removeEventListener("pointermove", onMove);
+      el.removeEventListener("pointerleave", onLeave);
+      el.removeEventListener("pointercancel", onLeave);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
-      motionPreference.removeEventListener("change", onMotionChange);
+      window.visualViewport?.removeEventListener("resize", onScroll);
+      window.visualViewport?.removeEventListener("scroll", onScroll);
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("pageshow", onVisibility);
+      motionPreference.removeEventListener("change", onPreference);
+      finePointer.removeEventListener("change", onPreference);
     };
   }, [max, mode, perspective]);
 
@@ -142,7 +199,6 @@ export default function Tilt3D({
       style={{
         transformStyle: "preserve-3d",
         transformOrigin,
-        willChange: "transform",
         ...style,
       }}
     >

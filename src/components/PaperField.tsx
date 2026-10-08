@@ -15,7 +15,7 @@ import type * as THREE_NS from "three";
  *     hidden.
  *   - No WebGL? The renderer throws, we return, and the page is simply
  *     without the effect.
- *   - prefers-reduced-motion: one still frame, no loop, no listeners.
+ *   - Changes to reduced motion pause/resume the loop immediately.
  */
 export default function PaperField() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -34,9 +34,8 @@ export default function PaperField() {
       // pass is already torn down by the time the import resolves.
       if (disposed) return;
 
-      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-      const compact = window.innerWidth < 1024;
+      const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
 
       let renderer: THREE_NS.WebGLRenderer;
       try {
@@ -100,7 +99,7 @@ export default function PaperField() {
       const geometries: THREE_NS.BufferGeometry[] = [];
       const materials: THREE_NS.Material[] = [];
 
-      const COUNT = compact ? 7 : 11;
+      const COUNT = 11;
       const W = 1.7;
       const H = W * 1.414; // A-series paper proportion
 
@@ -130,7 +129,7 @@ export default function PaperField() {
 
         // The canvas box itself already excludes the copy (see
         // .paper-field), so sheets can spread across all of it.
-        const x = (rand() - 0.5) * (compact ? 8 : 7);
+        const x = (rand() - 0.5) * 7;
         const y = (rand() - 0.5) * 7.2;
         const z = -8 + rand() * 9.5;
         mesh.position.set(x, y, z);
@@ -151,6 +150,9 @@ export default function PaperField() {
         const w = host.clientWidth;
         const h = host.clientHeight;
         if (w === 0 || h === 0) return;
+        const compact = window.innerWidth < 1024;
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, compact ? 1.5 : 1.75));
+        sheets.forEach((sheet, index) => { sheet.mesh.visible = !compact || index < 7; });
         renderer.setSize(w, h, false);
         camera.aspect = w / h;
         camera.updateProjectionMatrix();
@@ -158,19 +160,19 @@ export default function PaperField() {
       resize();
       const ro = new ResizeObserver(() => {
         resize();
-        if (reduced) renderer.render(scene, camera);
       });
       ro.observe(host);
 
       /* ── Inputs ── */
       const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
       const onPointer = (e: PointerEvent) => {
+        if (motionPreference.matches || !finePointer.matches || e.pointerType === "touch") return;
         pointer.tx = (e.clientX / window.innerWidth) * 2 - 1;
         pointer.ty = (e.clientY / window.innerHeight) * 2 - 1;
       };
-      if (finePointer && !reduced) {
-        window.addEventListener("pointermove", onPointer, { passive: true });
-      }
+      window.addEventListener("pointermove", onPointer, { passive: true });
+      const resetPointer = () => { pointer.tx = pointer.ty = 0; };
+      finePointer.addEventListener("change", resetPointer);
 
       // Progress through the whole hero, not just this canvas's box
       // (which is only the bottom band on small screens).
@@ -181,13 +183,15 @@ export default function PaperField() {
       };
 
       /* ── Frame ── */
-      const clock = new THREE.Clock();
-      const frame = () => {
-        const t = clock.getElapsedTime();
+      let elapsed = 0;
+      const frame = (delta: number) => {
+        elapsed += delta / 1000;
+        const t = elapsed;
         const p = scrollProgress();
 
-        pointer.x += (pointer.tx - pointer.x) * 0.05;
-        pointer.y += (pointer.ty - pointer.y) * 0.05;
+        const ease = 1 - Math.exp(-delta / 325);
+        pointer.x += (pointer.tx - pointer.x) * ease;
+        pointer.y += (pointer.ty - pointer.y) * ease;
 
         // The whole field turns toward the pointer; scrolling lifts it
         // and draws the sheets toward the camera.
@@ -206,34 +210,26 @@ export default function PaperField() {
         renderer.render(scene, camera);
       };
 
-      // Fade the canvas in once there is a first frame, not before.
-      frame();
-      canvas.style.opacity = "1";
-
-      if (reduced) {
-        teardown = () => {
-          ro.disconnect();
-          dispose();
-        };
-        return;
-      }
-
       /* ── Run only while visible ── */
       let raf = 0;
-      let inView = true;
-      const loop = () => {
-        frame();
+      let inView = false;
+      let previousTime = 0;
+      const loop = (time: number) => {
+        frame(previousTime ? time - previousTime : 0);
+        previousTime = time;
+        // Fade in only after rendering, including when motion is re-enabled.
+        canvas.style.opacity = "1";
         raf = requestAnimationFrame(loop);
       };
       const start = () => {
-        if (!raf && inView && !document.hidden) {
-          clock.getDelta(); // don't jump after a pause
+        if (!raf && inView && !document.hidden && !motionPreference.matches) {
           raf = requestAnimationFrame(loop);
         }
       };
       const stop = () => {
         if (raf) cancelAnimationFrame(raf);
         raf = 0;
+        previousTime = 0;
       };
 
       const io = new IntersectionObserver(([entry]) => {
@@ -245,8 +241,12 @@ export default function PaperField() {
 
       const onVisibility = () => (document.hidden ? stop() : start());
       document.addEventListener("visibilitychange", onVisibility);
-
-      start();
+      window.addEventListener("pageshow", onVisibility);
+      const onMotion = () => {
+        if (motionPreference.matches) stop();
+        else { resize(); start(); }
+      };
+      motionPreference.addEventListener("change", onMotion);
 
       function dispose() {
         geometries.forEach((g) => g.dispose());
@@ -260,7 +260,10 @@ export default function PaperField() {
         io.disconnect();
         ro.disconnect();
         document.removeEventListener("visibilitychange", onVisibility);
+        window.removeEventListener("pageshow", onVisibility);
         window.removeEventListener("pointermove", onPointer);
+        finePointer.removeEventListener("change", resetPointer);
+        motionPreference.removeEventListener("change", onMotion);
         dispose();
       };
     })();

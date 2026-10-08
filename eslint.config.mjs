@@ -9,6 +9,8 @@ const eslintConfig = defineConfig([
   globalIgnores([
     // Default ignores of eslint-config-next:
     ".next/**",
+    // Generated screenshots and local browser downloads.
+    ".preview/**",
     "out/**",
     "build/**",
     "next-env.d.ts",
