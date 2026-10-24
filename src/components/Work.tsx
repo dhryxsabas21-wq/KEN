@@ -25,7 +25,7 @@ function Screen({ project, order }: { project: WorkRow; order: number }) {
             width={f.image.width}
             height={f.image.height}
             alt={f.image.alt}
-            sizes="(min-width: 1340px) 720px, (min-width: 1024px) 54vw, 100vw"
+            sizes="(min-width: 1340px) 598px, (min-width: 1024px) 46vw, 100vw"
             className="block h-auto w-full"
           />
         </figure>
@@ -50,7 +50,7 @@ function CaseStudy({ project, order }: { project: WorkRow; order: number }) {
   return (
     // grid-cols-1 = minmax(0, 1fr): without an explicit column the single
     // mobile track grows to its widest content and the page scrolls sideways.
-    <article className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:gap-16">
+    <article id={`project-${project.id}`} className="case-study grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
       <div className={flip ? "lg:order-2" : undefined}>
         <Screen project={project} order={order} />
       </div>
@@ -69,7 +69,7 @@ function CaseStudy({ project, order }: { project: WorkRow; order: number }) {
         >
           {project.name}
         </h3>
-        <p data-reveal className="label mt-2 text-ink-2">
+        <p data-reveal className="detail mt-3 text-ink-2">
           {project.client}
         </p>
 
@@ -87,8 +87,8 @@ function CaseStudy({ project, order }: { project: WorkRow; order: number }) {
           style={{ "--reveal-delay": "210ms" } as React.CSSProperties}
         >
           {f.features.map((feature) => (
-            <li key={feature} className="label flex items-start gap-2.5 text-ink-2">
-              <span aria-hidden="true" className="mt-[3px] h-1.5 w-1.5 shrink-0 bg-pigment" />
+            <li key={feature} className="detail flex items-start gap-2.5 text-ink-2">
+              <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 bg-pigment" />
               {feature}
             </li>
           ))}
@@ -101,7 +101,7 @@ function CaseStudy({ project, order }: { project: WorkRow; order: number }) {
           style={{ "--reveal-delay": "280ms" } as React.CSSProperties}
         >
           {project.stack.split(",").map((tech) => (
-            <li key={tech} className="label border border-hair bg-surface px-2.5 py-1.5 text-ink">
+            <li key={tech} className="chip">
               {tech.trim()}
             </li>
           ))}
@@ -139,16 +139,17 @@ export default function Work() {
   const rest = work.filter((w) => !w.featured);
 
   return (
-    <section id="work" className="hair-t scroll-mt-[60px] py-24 lg:py-32">
+    <section id="work" aria-labelledby="work-title" className="section-space hair-t">
       <div className="mx-auto max-w-[1340px] px-6 lg:px-10">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
             <p data-reveal className="label text-pigment">
-              04 — Work
+              01 — Selected work
             </p>
             <h2
               data-reveal
-              className="display mt-6 text-[clamp(28px,3.6vw,48px)] text-ink"
+              id="work-title"
+              className="display section-title mt-5 text-ink"
               style={{ "--reveal-delay": "70ms" } as React.CSSProperties}
             >
               Selected <em className="display-em">work</em>.

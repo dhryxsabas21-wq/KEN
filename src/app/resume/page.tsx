@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import ResumeToolbar from "@/components/ResumeToolbar";
 import {
   certificate,
@@ -15,14 +14,6 @@ import {
 } from "@/lib/resume";
 import "./resume.css";
 
-/* Body face for the résumé only. A sans reads better than mono at
-   9.5pt on paper; the serif and mono from the site carry the name and
-   the labels, so it still looks like the same person's document. */
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "Résumé",
@@ -71,7 +62,7 @@ function Entry({ entry }: { entry: ResumeEntry }) {
 
 export default function ResumePage() {
   return (
-    <div className={inter.variable}>
+    <div>
       <ResumeToolbar pdfName={PDF_NAME} />
 
       <main className="rs-stage">

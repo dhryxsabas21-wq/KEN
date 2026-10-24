@@ -392,11 +392,12 @@
 @media screen and (max-width: 460px) {
   .rs-contact {
     grid-template-columns: 1fr;
-    gap: 2px;
+    gap: 12px;
   }
 
-  .rs-contact dd + dt {
-    margin-top: 8px;
+  .rs-contact > div {
+    display: grid;
+    gap: 2px;
   }
 
   .rs-entry-head {

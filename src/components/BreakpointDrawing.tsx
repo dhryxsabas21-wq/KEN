@@ -129,7 +129,7 @@ export default function BreakpointDrawing() {
             perspective when it comes to rest, and at that point a
             compensating scale() would shrink the labels off their rows. */}
         <div
-          className="relative w-[124px] shrink-0 sm:w-[150px]"
+          className="relative w-[116px] shrink-0 sm:w-[150px]"
           style={{ transform: "translateZ(24px)" }}
           aria-hidden="true"
         >
@@ -142,7 +142,7 @@ export default function BreakpointDrawing() {
               <p className="label whitespace-nowrap font-semibold text-ink">
                 {b.name} · {b.widthPx}px
               </p>
-              <p className="label mt-0.5 whitespace-nowrap text-[9.5px] text-muted">
+              <p className="label mt-0.5 hidden whitespace-nowrap text-muted sm:block">
                 {b.note}
               </p>
             </div>

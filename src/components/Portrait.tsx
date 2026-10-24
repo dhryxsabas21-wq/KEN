@@ -41,10 +41,6 @@ export default function Portrait() {
           <span className="label text-pigment">Developer</span>
         </div>
       </div>
-      <div className="portrait-note" aria-hidden="true">
-        <span className="portrait-code">&lt;/&gt;</span>
-        <span className="label">From idea<br /><span className="text-ink-2">to working software.</span></span>
-      </div>
       <p
         className="label portrait-status"
         style={{ transform: "translateZ(60px)" }}
@@ -53,7 +49,6 @@ export default function Portrait() {
         Available for projects
       </p>
     </Tilt3D>
-    <p className="label portrait-hint text-muted"><span aria-hidden="true">✧</span> A little perspective changes everything.</p>
     </div>
   );
 }

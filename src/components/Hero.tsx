@@ -32,7 +32,7 @@ export default function Hero() {
             className="display hero-name text-ink"
             style={{ "--reveal-delay": "60ms" } as React.CSSProperties}
           >
-            {profile.fullName.slice(0, -profile.lastName.length).trim()}<br />
+            {profile.fullName.slice(0, -profile.lastName.length).trim()}{" "}<br />
             <span className="hero-surname">{profile.lastName}<span className="text-pigment">.</span></span>
           </h1>
 
@@ -75,12 +75,10 @@ export default function Hero() {
           <p
             data-reveal
             data-eager
-            className="label mt-10 text-muted"
+            className="hero-location mt-8 text-ink-2"
             style={{ "--reveal-delay": "300ms" } as React.CSSProperties}
           >
-            <span className="whitespace-nowrap">{profile.heroCaption.place}</span>
-            {" · "}
-            <span className="whitespace-nowrap">{profile.heroCaption.coordinates}</span>
+            <span aria-hidden="true" className="text-pigment">↗</span> {profile.location}
           </p>
         </div>
 

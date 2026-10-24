@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Azeret_Mono, Instrument_Serif } from "next/font/google";
 import { profile } from "@/lib/content";
 import { siteUrl } from "@/lib/site";
+import { bodyFont } from "@/lib/fonts";
 import "./globals.css";
 
 /* Instrument Serif ships a single weight with a true italic — the
@@ -69,7 +70,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${instrumentSerif.variable} ${azeretMono.variable}`}
+      className={`${instrumentSerif.variable} ${azeretMono.variable} ${bodyFont.variable}`}
       suppressHydrationWarning
     >
       <head>

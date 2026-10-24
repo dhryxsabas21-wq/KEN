@@ -10,7 +10,7 @@ import Tilt3D from "./Tilt3D";
  */
 export default function Services() {
   return (
-    <section id="services" className="hair-t scroll-mt-[60px] bg-ground-2 py-24 lg:py-32">
+    <section id="services" aria-labelledby="services-title" className="section-space hair-t bg-ground-2">
       <div className="mx-auto max-w-[1340px] px-6 lg:px-10">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
@@ -19,7 +19,8 @@ export default function Services() {
             </p>
             <h2
               data-reveal
-              className="display mt-6 max-w-[20ch] text-[clamp(28px,3.6vw,48px)] text-ink"
+              id="services-title"
+              className="display section-title mt-5 max-w-[20ch] text-ink"
               style={{ "--reveal-delay": "70ms" } as React.CSSProperties}
             >
               What I <em className="display-em">build</em> for people.
@@ -44,27 +45,28 @@ export default function Services() {
             >
               <Tilt3D
                 max={7}
-                className="group relative h-full border border-hair bg-ground p-7 transition-colors duration-300 hover:border-pigment/60 lg:p-9"
+                className="service-card group relative flex h-full flex-col border border-hair bg-ground p-6 transition-colors duration-300 hover:border-pigment/60 xl:p-8"
               >
-                {/* Index number, floating 50px in front of the plane */}
+                <div className="flex items-start justify-between gap-5">
+                <h3 className="display text-[30px] leading-[1.1] text-ink">
+                  {service.title}
+                </h3>
                 <span
                   aria-hidden="true"
-                  className="display extrude pointer-events-none absolute right-6 top-3 text-[clamp(64px,7vw,96px)] leading-none text-pigment lg:right-8"
-                  style={{ transform: "translateZ(50px)" }}
+                  className="display pointer-events-none shrink-0 text-[38px] leading-none text-pigment"
+                  style={{ transform: "translateZ(24px)" }}
                 >
                   {service.index}
                 </span>
 
-                <h3 className="display relative max-w-[70%] text-[clamp(24px,2.4vw,34px)] text-ink">
-                  {service.title}
-                </h3>
+                </div>
 
                 <p className="copy relative mt-4 max-w-[46ch]">{service.summary}</p>
 
-                <ul className="relative mt-6 grid grid-cols-2 gap-x-6 gap-y-2">
+                <ul className="relative mb-7 mt-6 grid gap-2">
                   {service.includes.map((item) => (
-                    <li key={item} className="label flex items-center gap-2.5 text-ink-2">
-                      <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 bg-pigment" />
+                    <li key={item} className="detail flex items-start gap-2.5 text-ink-2">
+                      <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 bg-pigment" />
                       {item}
                     </li>
                   ))}
@@ -72,14 +74,14 @@ export default function Services() {
 
                 {/* Stack chips, lifted slightly off the plane */}
                 <div
-                  className="hair-t relative mt-8 flex flex-wrap items-center justify-between gap-4 pt-5"
+                  className="hair-t relative mt-auto flex flex-wrap items-center justify-between gap-4 pt-5"
                   style={{ transform: "translateZ(22px)" }}
                 >
                   <ul className="flex flex-wrap gap-2" aria-label={`${service.title} stack`}>
                     {service.stack.map((tech) => (
                       <li
                         key={tech}
-                        className="label border border-hair bg-surface px-2.5 py-1.5 text-ink"
+                        className="chip"
                       >
                         {tech}
                       </li>
@@ -89,12 +91,12 @@ export default function Services() {
                   {service.proof ? (
                     <a
                       href={service.proof.href}
-                      className="navlink label inline-flex min-h-[32px] items-center text-pigment"
+                      className="navlink label inline-flex min-h-11 items-center text-pigment"
                     >
                       See {service.proof.label} →
                     </a>
                   ) : (
-                    <span className="label text-muted">Available to build</span>
+                    <span className="label inline-flex min-h-11 items-center text-muted">Available to build</span>
                   )}
                 </div>
               </Tilt3D>

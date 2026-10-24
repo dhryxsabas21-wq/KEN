@@ -17,10 +17,11 @@ export default function Close() {
   const lgCols = LG_COLS[Math.min(contact.channels.length, 6)] ?? "lg:grid-cols-4";
 
   return (
-    <section id="close" className="hair-t scroll-mt-[60px] py-24 lg:py-32">
+    <section id="close" aria-labelledby="close-title" className="section-space hair-t">
       <div className="mx-auto max-w-[1340px] px-6 lg:px-10">
         <h2
           data-reveal
+          id="close-title"
           className="display max-w-[24ch] text-[clamp(30px,4.6vw,64px)] text-ink"
         >
           {close.heading.before}{" "}
@@ -38,7 +39,7 @@ export default function Close() {
           className="mt-12 flex flex-wrap items-center justify-between gap-6"
           style={{ "--reveal-delay": "70ms" } as React.CSSProperties}
         >
-          <a href={`mailto:${contact.email}`} className="btn btn-pigment">
+          <a href={`mailto:${contact.email}`} className="btn btn-primary text-[14px] normal-case tracking-normal">
             {contact.email}
           </a>
 

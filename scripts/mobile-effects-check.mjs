@@ -67,7 +67,14 @@ for (const [engine, browserType, launchOptions, profiles] of [
         assert(await page.locator(".portrait-img").evaluate((el) => el.complete && el.naturalWidth > 0 && getComputedStyle(el).objectFit === "contain"));
 
         await page.emulateMedia({ reducedMotion: "reduce" });
-        await page.waitForTimeout(350);
+        // Media-query change events are asynchronous, especially in WebKit
+        // under concurrent browser load. Check the reset rather than a timer.
+        await page.waitForFunction(() =>
+          matchMedia("(prefers-reduced-motion: reduce)").matches &&
+          document.querySelector(".hero-portrait").style.transform === "" &&
+          getComputedStyle(document.querySelector(".paper-field")).display === "none",
+          null, { timeout: 5000 });
+        await page.waitForTimeout(100);
         assert.equal((await tilt(page)).transform, "", `${name}: reduced motion resets tilt`);
         assert(await page.locator(".paper-field").isHidden(), `${name}: reduced motion hides WebGL`);
         const stopped = await page.evaluate(() => window.__motionFrames);

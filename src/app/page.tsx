@@ -17,12 +17,12 @@ export default function Home() {
 
       {/* Offset for the fixed 60px bar, so the hero is exactly the
           viewport minus the nav rather than starting underneath it. */}
-      <main id="main" className="pt-[60px]">
+      <main id="main" tabIndex={-1} className="pt-[112px] lg:pt-[60px]">
         <Hero />
-        <Practice />
-        <Services />
-        <Stack />
         <Work />
+        <Services />
+        <Practice />
+        <Stack />
         <About />
         <Close />
       </main>

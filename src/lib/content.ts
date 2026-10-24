@@ -27,7 +27,7 @@ export const profile = {
   },
 
   lede:
-    "Full-stack and desktop application developer based in Baler, Aurora. I build business websites and offline-first desktop systems in PHP, JavaScript, Electron and plain web standards.",
+    "I build responsive business websites and offline-first desktop systems with PHP, JavaScript and Electron. Based in Baler, Aurora, Philippines.",
 
   /** Corner caption. Two unbreakable runs, so a narrow screen wraps
       between them rather than orphaning the "E". */
@@ -49,13 +49,6 @@ export const contact = {
   channels: [
     { label: "WhatsApp", value: "Message me", href: "https://wa.me/qr/4ZSR3FP5R265A1" },
     { label: "Instagram", value: "@kenz.ie021", href: "https://www.instagram.com/kenz.ie021/" },
-    {
-      label: "Facebook",
-      value: "Kennedy Dhryx N Pronto",
-      // TODO: replace with the page's own URL (page → ⋯ → Copy link).
-      // Until then this searches Facebook for the exact page name.
-      href: "https://www.facebook.com/search/top?q=Kennedy%20Dhryx%20N%20Pronto",
-    },
     {
       label: "LinkedIn",
       value: "Kennedy Dhryx Pronto",
@@ -89,10 +82,10 @@ export const subject: {
 };
 
 export const nav = [
-  { id: "practice", label: "Practice" },
-  { id: "services", label: "Services" },
-  { id: "stack", label: "Stack" },
   { id: "work", label: "Work" },
+  { id: "services", label: "Services" },
+  { id: "practice", label: "Approach" },
+  { id: "stack", label: "Tools" },
   { id: "about", label: "About" },
 ] as const;
 
@@ -119,8 +112,8 @@ export const practice = {
     },
     {
       label: "Responsive",
-      description: "One layout from 375px phones to 1440px desktops",
-      value: "4 breakpoints",
+      description: "Layouts that work on phones, tablets and desktops",
+      value: "Small to large screens",
     },
     {
       label: "Server-side",
@@ -161,7 +154,7 @@ export const services: Service[] = [
       "Responsive sites for local establishments — what they offer, when they're open, where to find them, and how to get in touch.",
     includes: ["Responsive layout", "Menus & catalogues", "Contact & location", "Deployment"],
     stack: ["HTML", "CSS", "JavaScript", "Bootstrap"],
-    proof: { label: "Bella's Takoyaki", href: "#work" },
+    proof: { label: "Bella's Takoyaki", href: "#project-bellas-takoyaki" },
   },
   {
     index: "02",
@@ -170,7 +163,7 @@ export const services: Service[] = [
       "Offline-first desktop applications with a local database, for clinics and offices that can't depend on the internet.",
     includes: ["Digital forms", "Patient & client records", "Search & history", "Runs offline"],
     stack: ["Electron", "Node.js", "SQLite"],
-    proof: { label: "MedSys", href: "#work" },
+    proof: { label: "MedSys", href: "#project-medsys" },
   },
   {
     index: "03",
@@ -212,6 +205,7 @@ export const stack: Tech[] = [
 /* ──────────────────────────── Work ──────────────────────────── */
 
 export type WorkRow = {
+  id: string;
   name: string;
   client: string;
   role: string;
@@ -233,6 +227,7 @@ export type WorkRow = {
 
 export const work: WorkRow[] = [
   {
+    id: "medsys",
     name: "MedSys",
     client: "Dr. Andres Aragon Angara Health Center & Birthing Facility",
     role: "Capstone · Full-stack",
@@ -259,6 +254,7 @@ export const work: WorkRow[] = [
     },
   },
   {
+    id: "bellas-takoyaki",
     name: "Bella's Takoyaki",
     client: "Local establishment, Baler, Aurora",
     role: "Freelance · Frontend",
@@ -291,6 +287,7 @@ export const work: WorkRow[] = [
     },
   },
   {
+    id: "desktop-software",
     name: "Desktop software projects",
     client: "Self-directed",
     role: "Developer",
@@ -343,9 +340,9 @@ export const certificate = {
 
 export const close = {
   heading: {
-    before: "Open to work, and to",
-    emphasis: "difficult requirements",
-    after: ".",
+    before: "Have a project",
+    emphasis: "in mind?",
+    after: "",
   },
   fineprint:
     "Currently finishing a BS in Information Technology at ASCOT. Available for freelance and project-based work — websites, web applications and desktop systems.",

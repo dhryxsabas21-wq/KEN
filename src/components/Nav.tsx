@@ -6,36 +6,33 @@ import { nav, profile } from "@/lib/content";
 export default function Nav() {
   const [current, setCurrent] = useState<string | null>(null);
 
-  // Mark the section occupying the reading band.
+  // Follow section positions, including long sections and anchor jumps.
   useEffect(() => {
     const targets = nav
       .map((n) => document.getElementById(n.id))
       .filter((el): el is HTMLElement => el !== null);
     if (targets.length === 0) return;
 
-    const ratios = new Map<string, number>();
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) ratios.set(entry.target.id, entry.intersectionRatio);
-          else ratios.delete(entry.target.id);
-        }
-        let best: string | null = null;
-        let bestRatio = 0;
-        for (const [id, ratio] of ratios) {
-          if (ratio > bestRatio) {
-            best = id;
-            bestRatio = ratio;
-          }
-        }
-        setCurrent(best);
-      },
-      { rootMargin: "-25% 0px -50% 0px", threshold: [0, 0.25, 0.5, 0.75, 1] },
-    );
-
-    targets.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const marker = (window.innerWidth < 1024 ? 112 : 60) + 80;
+      let active: string | null = null;
+      for (const target of targets) {
+        if (target.getBoundingClientRect().top <= marker) active = target.id;
+      }
+      if ((document.getElementById("close")?.getBoundingClientRect().top ?? Infinity) <= marker) active = null;
+      setCurrent(active);
+    };
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
+    schedule();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule, { passive: true });
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+    };
   }, []);
 
   return (
@@ -56,20 +53,20 @@ export default function Nav() {
         }}
       >
         <div className="mx-auto flex h-full max-w-[1340px] items-center justify-between px-6 lg:px-10">
-          <a href="#top" className="display text-[19px] leading-none text-ink">
+          <a href="#top" aria-label={`${profile.firstName} ${profile.lastName} — home`} className="display flex min-h-11 items-center text-[24px] leading-none text-ink">
             {profile.shortMark}
             <span className="text-pigment">.</span>
           </a>
 
-          <nav aria-label="Primary" className="hidden md:block">
+          <nav aria-label="Primary" className="hidden lg:block">
             <ul className="flex items-center gap-8">
               {nav.map((item) => (
                 <li key={item.id}>
                   <a
                     href={`#${item.id}`}
                     data-current={current === item.id}
-                    aria-current={current === item.id ? "true" : undefined}
-                    className="navlink label text-ink-2 transition-colors hover:text-ink"
+                    aria-current={current === item.id ? "location" : undefined}
+                    className="navlink label inline-flex min-h-11 items-center text-ink-2 transition-colors hover:text-ink"
                   >
                     {item.label}
                   </a>
@@ -78,7 +75,7 @@ export default function Nav() {
             </ul>
           </nav>
 
-          <a href="#close" className="btn btn-pigment h-[38px] min-h-[38px] md:h-[40px]">
+          <a href="#close" className="btn btn-pigment min-h-11">
             Get in touch
           </a>
         </div>
@@ -88,7 +85,7 @@ export default function Nav() {
           toggle — four items do not need a dialog. */}
       <nav
         aria-label="Sections"
-        className="fixed inset-x-0 top-[60px] z-40 border-b border-hair md:hidden"
+        className="fixed inset-x-0 top-[60px] z-40 border-b border-hair lg:hidden"
         style={{
           backgroundColor: "rgb(24 22 20 / 0.78)",
           backdropFilter: "blur(14px)",
@@ -96,13 +93,13 @@ export default function Nav() {
         }}
       >
         <ul className="flex h-[52px] items-center justify-between px-6">
-          {nav.map((item) => (
+          {nav.filter((item) => ["work", "services", "about"].includes(item.id)).map((item) => (
             <li key={item.id}>
               <a
                 href={`#${item.id}`}
                 data-current={current === item.id}
-                aria-current={current === item.id ? "true" : undefined}
-                className="navlink label flex min-h-[32px] items-center text-ink-2"
+                aria-current={current === item.id ? "location" : undefined}
+                className="navlink label flex min-h-11 items-center px-2 text-ink-2"
               >
                 {item.label}
               </a>

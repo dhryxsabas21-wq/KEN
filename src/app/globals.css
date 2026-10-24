@@ -4,9 +4,8 @@
    WARM DARK EDITORIAL
    Charcoal ground, cream type, one copper accent.
 
-   Contrast against ground-2 (#1F1C19), the lighter of the two
-   grounds and so the worst case:
-     ink 14.6:1 · ink-2 8.4:1 · muted 4.9:1 · pigment 5.7:1
+   Minimum contrast on the three solid page surfaces:
+     ink 12.58:1 · ink-2 7.61:1 · muted 6.04:1 · pigment 5.24:1
    All clear WCAG AA for normal text.
 
    Layering matters: Tailwind v4 puts utilities in @layer utilities,
@@ -20,7 +19,7 @@
   --color-surface: #27231f;
   --color-ink: #ede6da;
   --color-ink-2: #bdb4a6;
-  --color-muted: #918878;
+  --color-muted: #aaa08f;
   --color-pigment: #e07a4b;
   --color-pigment-deep: #6e341b;
 
@@ -28,6 +27,7 @@
 
   --font-display: var(--font-instrument-serif), Georgia, serif;
   --font-mono: var(--font-azeret-mono), ui-monospace, monospace;
+  --font-sans: var(--font-inter), "Segoe UI", sans-serif;
 
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -40,22 +40,22 @@
     color-scheme: dark;
     scroll-behavior: smooth;
     /* Nav (60px) plus the section bar (52px) below md */
-    scroll-padding-top: 112px;
+    scroll-padding-top: 128px;
     -webkit-text-size-adjust: 100%;
     overflow-x: clip;
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     html {
-      scroll-padding-top: 60px;
+      scroll-padding-top: 76px;
     }
   }
 
   body {
     background-color: var(--color-ground);
     color: var(--color-ink);
-    font-family: var(--font-mono);
-    font-size: 12.5px;
+    font-family: var(--font-sans);
+    font-size: 16px;
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
@@ -93,7 +93,7 @@
     font-family: var(--font-display);
     font-weight: 400;
     letter-spacing: -0.015em;
-    line-height: 1.04;
+    line-height: 1.08;
   }
 
   .display-em {
@@ -103,26 +103,33 @@
 
   .label {
     font-family: var(--font-mono);
-    font-size: 10.5px;
+    font-size: 11.5px;
     font-weight: 500;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.09em;
     text-transform: uppercase;
-    line-height: 1.4;
+    line-height: 1.5;
   }
 
   .label-lg {
     font-size: 12.5px;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.08em;
   }
 
   .copy {
-    font-family: var(--font-mono);
-    font-size: 12.5px;
+    font-family: var(--font-sans);
+    font-size: 16px;
     font-weight: 400;
-    letter-spacing: 0.01em;
+    letter-spacing: 0;
     line-height: 1.75;
     color: var(--color-ink-2);
   }
+
+  .detail { font-family: var(--font-sans); font-size: 14px; line-height: 1.6; }
+  .chip { display: inline-block; padding: 5px 9px; border: 1px solid var(--color-hair); background: var(--color-surface); font-family: var(--font-mono); font-size: 11px; line-height: 1.5; color: var(--color-ink); }
+  .section-space { padding-block: clamp(64px, 7vw, 104px); }
+  .section-title { font-size: clamp(34px, 3.6vw, 48px); line-height: 1.12; text-wrap: balance; }
+  .case-study { scroll-margin-top: 20px; }
+  .hero-location { display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 1.6; }
 
   .hair-t {
     border-top: 1px solid var(--color-hair);
@@ -139,12 +146,12 @@
     align-items: center;
     justify-content: center;
     gap: 0.6em;
-    min-height: 44px;
-    padding: 0 1.4rem;
+    min-height: 48px;
+    padding: 0 1.15rem;
     font-family: var(--font-mono);
-    font-size: 10.5px;
+    font-size: 11.5px;
     font-weight: 500;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     border: 1px solid var(--color-ink);
     color: var(--color-ink);
@@ -262,7 +269,7 @@
     position: absolute;
     left: 0;
     right: 0;
-    bottom: -4px;
+    bottom: 5px;
     height: 1px;
     background-color: var(--color-pigment);
     transform: scaleX(0);
@@ -391,7 +398,7 @@
     position: relative;
     display: block;
     width: 100%;
-    height: 210px;
+    height: 220px;
     perspective: 900px;
     text-align: left;
     cursor: pointer;
@@ -412,7 +419,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 1.25rem;
+    padding: 18px;
     border: 1px solid var(--color-hair);
     background: var(--color-ground-2);
     backface-visibility: hidden;
@@ -576,53 +583,51 @@
   .hero-copy { max-width: 620px; }
   .hero-eyebrow { display: flex; align-items: center; gap: 12px; }
   .hero-eyebrow > span { width: 24px; height: 1px; background: currentColor; flex-shrink: 0; }
-  .hero-name { margin-top: 24px; font-size: clamp(52px, 5.9vw, 84px); line-height: 0.96; letter-spacing: -0.035em; }
+  .hero-name { margin-top: 24px; font-size: clamp(52px, 5.9vw, 84px); line-height: 1.01; letter-spacing: -0.025em; }
   .hero-surname { text-shadow: 1px 1px #69432d, 2px 2px #69432d, 3px 3px #412e24, 4px 4px #412e24; }
   .hero-headline { margin-top: 26px; max-width: 24ch; font-size: clamp(24px, 2.35vw, 32px); line-height: 1.18; }
   .btn-primary { background: var(--color-pigment); color: var(--color-ground); border-color: var(--color-pigment); --slab: var(--color-pigment-deep); }
   .hero-visual { justify-self: center; min-width: 0; }
   .hero-bottom { display: flex; justify-content: space-between; align-items: center; gap: 24px; width: calc(100% - 48px); min-height: 72px; padding-block: 18px; border-top: 1px solid var(--color-hair); }
-  .hero-scroll { display: flex; align-items: center; gap: 28px; }
+  .hero-scroll { display: flex; align-items: center; gap: 20px; min-height: 44px; }
   .hero-scroll span { color: var(--color-pigment); font-size: 21px; transition: transform 200ms; }
   .hero-scroll:focus-visible span { transform: translateY(4px); }
   @media (hover: hover) and (pointer: fine) {
     .hero-scroll:hover span { transform: translateY(4px); }
   }
-  .paper-field { opacity: 0.3; }
-  .portrait-stage { position: relative; padding-block: 22px 40px; }
+  .paper-field { opacity: 0.18; }
+  .portrait-stage { position: relative; padding-block: 22px 16px; }
   .portrait-backplate { position: absolute; inset: -10px; border: 1px solid rgb(224 122 75 / 0.35); background: #241e19; transform: translateZ(-35px) rotate(-5deg); box-shadow: 0 30px 70px #0005; }
   .portrait-bg { background: radial-gradient(ellipse at 50% 38%, #79563c 0%, #382b22 45%, #24201b 80%); box-shadow: 8px 8px 0 #6e341b, 0 28px 70px #0006; }
   .portrait-grid { position: absolute; inset: 0; background-image: linear-gradient(#ede6da0b 1px, transparent 1px), linear-gradient(90deg, #ede6da0b 1px, transparent 1px); background-size: 36px 36px; transform: translateZ(2px); }
   .portrait-photo { inset: 1px; transform: translateZ(25px); }
   .portrait-shine { position: absolute; inset: 0; pointer-events: none; transform: translateZ(32px); background: radial-gradient(circle at var(--light-x, 50%) var(--light-y, 25%), #ffe2bc20, transparent 55%); mix-blend-mode: screen; }
   .portrait-caption { position: absolute; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-between; gap: 12px; padding: 38px 18px 18px; background: linear-gradient(transparent, #181614ed); transform: translateZ(36px); }
-  .portrait-status { position: absolute; top: -19px; right: -15px; display: flex; align-items: center; gap: 10px; padding: 13px 15px; border: 1px solid #e07a4b66; background: #27231f; box-shadow: 0 10px 26px #0004; font-size: 9px; letter-spacing: 0.1em; }
+  .portrait-status { position: absolute; top: -19px; right: -8px; display: flex; align-items: center; gap: 10px; padding: 12px 14px; border: 1px solid #e07a4b66; background: #27231f; box-shadow: 0 10px 26px #0004; font-size: 11px; letter-spacing: 0.06em; }
   .portrait-status > span { width: 6px; height: 6px; border-radius: 50%; background: #d4dc9b; box-shadow: 0 0 12px #d4dc9b66; }
-  .portrait-note { position: absolute; left: -38px; bottom: 68px; display: flex; align-items: center; gap: 13px; padding: 14px 18px; background: #211d19; border: 1px solid #e07a4b55; box-shadow: 7px 7px 0 #18161499; transform: translateZ(65px); }
-  .portrait-note .label { font-size: 8px; line-height: 1.8; letter-spacing: 0.1em; }
-  .portrait-code { color: var(--color-pigment); font-size: 24px; }
-  .portrait-hint { position: absolute; bottom: 0; left: -20px; right: -20px; text-align: center; font-size: 8px; letter-spacing: 0.11em; }
-  .portrait-hint span { color: var(--color-pigment); padding-right: 7px; }
-  .portrait-orbit { position: absolute; inset: -28px -46px 8px; border: 1px solid #e07a4b20; border-radius: 50%; transform: rotate(-24deg); pointer-events: none; }
+  .portrait-orbit { position: absolute; inset: -18px -26px 8px; border: 1px solid #e07a4b20; border-radius: 50%; transform: rotate(-24deg); pointer-events: none; }
   .portrait-orbit::after { content: ""; position: absolute; top: 16%; left: 11%; width: 9px; height: 9px; background: var(--color-pigment); box-shadow: 0 0 20px #e07a4b77; animation: orbit-spark 5s ease-in-out infinite; }
   @keyframes orbit-spark { 50% { transform: translate(8px, -12px) rotate(90deg); } }
   @media (max-width: 1023px) {
-    .hero-layout { grid-template-columns: minmax(0, 1fr); gap: 58px; min-height: auto; padding-top: 96px; padding-bottom: 42px; }
+    .hero-layout { grid-template-columns: minmax(0, 1fr); gap: 48px; min-height: auto; padding-top: 44px; padding-bottom: 36px; }
     .hero-copy { width: 100%; max-width: 580px; justify-self: center; }
     .hero-name { font-size: clamp(50px, 8vw, 76px); }
     .hero-headline { max-width: 28ch; }
     .hero-bottom { flex-wrap: wrap; }
-    .portrait-note { left: -16px; }
   }
   @media (max-width: 479px) {
-    .hero-name { font-size: clamp(40px, 11.5vw, 55px); }
-    .hero-eyebrow { font-size: 8px; letter-spacing: 0.1em; }
-    .portrait-status { right: -8px; padding: 11px; font-size: 8px; }
+    .hero-name { font-size: clamp(42px, 12vw, 56px); }
+    .hero-eyebrow { font-size: 11px; letter-spacing: 0.06em; }
+    .hero-eyebrow > span { width: 16px; }
+    .portrait-status { padding: 10px; }
     .portrait-caption { padding-inline: 12px; }
-    .portrait-caption .label { font-size: 8px; letter-spacing: 0.08em; }
-    .portrait-note { bottom: 55px; padding: 10px 12px; }
-    .hero-bottom > p { max-width: 23ch; font-size: 8px; line-height: 1.8; }
-    .hero-scroll { font-size: 8px; gap: 12px; }
+    .portrait-caption .label { font-size: 11px; letter-spacing: 0.04em; }
+    .hero-bottom { gap: 8px; }
+    .hero-bottom > p { max-width: 24ch; font-size: 11px; line-height: 1.7; }
+    .hero-scroll { font-size: 11px; gap: 10px; }
+    .tile { height: 220px; }
+    .tile-face { padding: 14px; }
+    .tile-back .copy { font-size: 14px; line-height: 1.6; }
   }
 }
 

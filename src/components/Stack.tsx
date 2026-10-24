@@ -14,10 +14,12 @@ function Tile({ tech, order }: { tech: Tech; order: number }) {
       <button
         type="button"
         className="tile"
+        aria-label={`${tech.name} — ${tech.category}`}
+        aria-describedby={`tech-details-${order}`}
         aria-pressed={pinned}
         onClick={() => setPinned((p) => !p)}
       >
-        <span className="tile-inner">
+        <span className="tile-inner" aria-hidden="true">
           {/* Front */}
           <span className="tile-face">
             <span className="flex items-start justify-between">
@@ -40,6 +42,7 @@ function Tile({ tech, order }: { tech: Tech; order: number }) {
             <span className="label block text-muted">{tech.name}</span>
           </span>
         </span>
+        <span id={`tech-details-${order}`} className="sr-only">{tech.usedFor}</span>
       </button>
     </li>
   );
@@ -47,25 +50,25 @@ function Tile({ tech, order }: { tech: Tech; order: number }) {
 
 export default function Stack() {
   return (
-    <section id="stack" className="hair-t scroll-mt-[60px] py-24 lg:py-32">
+    <section id="stack" aria-labelledby="stack-title" className="section-space hair-t">
       <div className="mx-auto max-w-[1340px] px-6 lg:px-10">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
             <p data-reveal className="label text-pigment">
-              03 — Stack
+              04 — Tools
             </p>
             <h2
               data-reveal
-              className="display mt-6 max-w-[22ch] text-[clamp(28px,3.6vw,48px)] text-ink"
+              id="stack-title"
+              className="display section-title mt-5 max-w-[22ch] text-ink"
               style={{ "--reveal-delay": "70ms" } as React.CSSProperties}
             >
-              Languages, frameworks and the <em className="display-em">tools</em>{" "}
-              behind them.
+              The tools behind the <em className="display-em">work</em>.
             </h2>
           </div>
           <p
             data-reveal
-            className="label text-muted"
+            className="detail text-muted"
             style={{ "--reveal-delay": "140ms" } as React.CSSProperties}
           >
             <span className="tile-hover-hint">Hover or click</span>

@@ -34,9 +34,8 @@ a linked project say "Available to build"; add the project to `work` before sett
 
 ## Still to do
 
-1. **Facebook link.** The Facebook card currently opens a Facebook *search* for
-   "Kennedy Dhryx N Pronto". Replace its `href` in `contact.channels` with the page's own URL
-   (on the page: **⋯ → Copy link**).
+1. **Facebook link.** Add the actual Facebook profile or page URL to `contact.channels`
+   before displaying a Facebook contact card. A search-results link is not a profile link.
 2. **Telegram link.** Add `{ label: "Telegram", value: "@yourname", href: "https://t.me/yourname" }`
    to `contact.channels`.
 3. **Add Java to your Word résumé** so it matches the web one.
@@ -115,13 +114,13 @@ All clear WCAG AA. **If you change a colour, re-check its contrast** — dark th
 | Where | What | File |
 | --- | --- | --- |
 | Hero background | WebGL field of paper forms, lit and fogged, turning toward the pointer and flying at you on scroll | [`PaperField.tsx`](src/components/PaperField.tsx) |
-| Hero portrait | Framed photo with the head breaking out above the frame; frame, corner marks, photo and status tag on separate depth planes, tilting toward the pointer | [`Portrait.tsx`](src/components/Portrait.tsx) |
+| Hero portrait | Complete photo in a stable 4:5 frame, with a backplate and availability tag on separate depth planes | [`Portrait.tsx`](src/components/Portrait.tsx) |
 | Work | Screenshots in browser / app-window frames that tilt in 3D, index tags floating in front | [`Work.tsx`](src/components/Work.tsx) |
 | Practice drawing | Tilting plane with labels floating 24px above it | [`Tilt3D.tsx`](src/components/Tilt3D.tsx) |
-| Services | Tilting panels with extruded copper numbers floating in front | [`Services.tsx`](src/components/Services.tsx) |
+| Services | Tilting panels with copper indices floating above the card | [`Services.tsx`](src/components/Services.tsx) |
 | Stack | Two-sided flip tiles: the technology on the front, what it was used for on the back | [`Stack.tsx`](src/components/Stack.tsx) |
 | Work | Project names lift off the page on hover | `.worktable .lift` |
-| Close | Extruded wordmark that lies back as it comes into view | [`Close.tsx`](src/components/Close.tsx) |
+| Footer | Extruded brand mark that tilts with the pointer or scroll | [`Footer.tsx`](src/components/Footer.tsx) |
 | Everywhere | Blocks swing up into place; buttons press down onto a hard slab | `globals.css` |
 
 How it stays fast and safe:
@@ -131,15 +130,17 @@ How it stays fast and safe:
   breaks.
 - **Touch screens** get the 3D from scroll position instead of the pointer, so phones still see it.
   Tiles flip on tap.
-- **Reduced motion** (OS setting): one still WebGL frame, no tilting, no reveals — everything is
+- **Reduced motion** (OS setting): WebGL is hidden, with no tilting or reveals — everything is
   shown immediately.
 - **No paper behind text.** The WebGL canvas's *box* starts where the copy column ends (desktop)
-  or covers only the wordmark band (phones), computed from the same numbers as the layout — see
+  or covers only the portrait band (phones), computed from the same numbers as the layout — see
   `.paper-field` in `globals.css`.
 
 ---
 
 ## What was verified
+
+See [UI_AUDIT.md](UI_AUDIT.md) for the UI/UX findings, changes, and validation scope.
 
 ### Mobile effects
 
@@ -158,6 +159,7 @@ npm run build
 npm run start -- --port 3100
 # In a second terminal:
 node scripts/preview-check.mjs http://127.0.0.1:3100
+node scripts/ui-check.mjs http://127.0.0.1:3100
 $env:PLAYWRIGHT_BROWSERS_PATH = Join-Path (Get-Location) '.preview/browsers'
 node node_modules/playwright-core/cli.js install webkit
 node scripts/mobile-effects-check.mjs http://127.0.0.1:3100
@@ -168,24 +170,21 @@ WebKit: scroll tilt and light, portrait/landscape layouts, tile taps, reduced mo
 at load and while browsing, idle animation callbacks, and fast-scroll reveals.
 These are browser emulations, not tests on physical phones.
 
-### Original layout checks
+### Layout and usability checks
 
 In headless Chrome against the production build:
 
-- **Hero, 9 viewports** (375×667 to 1920×1080, incl. 1280×600 and 1600×560): hero fills the window
-  below the nav; the photo loads, stays inside the hero and never touches any text; the name is
-  fully visible; side by side, the photo frame's top and bottom edges are level with the text
-  column's (0px offset at every desktop size); stacked, it is exactly centred; no paper behind
-  text; no sideways scroll.
-- **Footer**: the brand mark is fully visible (not cropped), the footer ends the page, and the
-  contact cards sit in one row on desktop.
-- **WebGL** initialises and animates on desktop and phone.
-- **3D**: the hero bracket rotates in 3D, service panels tilt toward the pointer, stack tiles flip.
-- **Stack tiles**: no text overflows either face, on desktop or a 375px phone.
-- **Reveal**: after a fast scroll pass, 0 of 55 blocks left hidden at three sizes.
-- **Drawing**: bars match real pixel ratios and the scale bar, 0% error.
-- **Contrast**: every measured text style ≥ 4.84:1.
-- **No console errors.**
+- **Ten viewport sizes**, from 320×740 to 1920×1080, including a 1280×600 laptop:
+  no horizontal page overflow, clipped text, or overflowing technology-card faces.
+- **Typography**: 16px Inter body text, serif headings, and readable mono labels and chips.
+- **Navigation**: working skip link and keyboard controls, accurate active sections,
+  project-specific service links, and anchor targets clear of the fixed navigation.
+- **Touch targets**: navigation, primary actions, and footer links have at least 44px height.
+- **Portrait**: the full photo loads and retains its 4:5 frame, with pointer and touch tilt.
+- **Résumé**: responsive screen layout, working download, and a regenerated one-page A4 PDF.
+- **Palette contrast** on the three page surfaces: primary 12.58:1, secondary 7.61:1,
+  muted 6.04:1, and copper 5.24:1 or better.
+- **Runtime**: no browser errors in the automated checks.
 
 ---
 

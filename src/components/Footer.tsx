@@ -36,7 +36,7 @@ export default function Footer() {
                 <li key={item.id}>
                   <a
                     href={`#${item.id}`}
-                    className="navlink label inline-flex min-h-[32px] items-center text-ink-2 hover:text-ink"
+                    className="navlink label inline-flex min-h-11 items-center text-ink-2 hover:text-ink"
                   >
                     {item.label}
                   </a>
@@ -46,7 +46,7 @@ export default function Footer() {
                 <li>
                   <a
                     href={contact.resumeHref}
-                    className="navlink label inline-flex min-h-[32px] items-center text-ink-2 hover:text-ink"
+                    className="navlink label inline-flex min-h-11 items-center text-ink-2 hover:text-ink"
                   >
                     Résumé
                   </a>
@@ -62,7 +62,7 @@ export default function Footer() {
               <li>
                 <a
                   href={`mailto:${contact.email}`}
-                  className="navlink label inline-block py-[9px] normal-case tracking-[0.04em] text-ink-2 hover:text-ink"
+                  className="navlink detail inline-flex min-h-11 flex-wrap content-center normal-case text-ink-2 hover:text-ink [overflow-wrap:anywhere]"
                 >
                   {/* Allowed to wrap only at the "@", never mid-word */}
                   {contact.email.split("@")[0]}
@@ -72,7 +72,7 @@ export default function Footer() {
               <li>
                 <a
                   href={contact.phoneHref}
-                  className="navlink label inline-flex min-h-[32px] items-center text-ink-2 hover:text-ink"
+                  className="navlink label inline-flex min-h-11 items-center text-ink-2 hover:text-ink"
                 >
                   {contact.phone}
                 </a>
@@ -83,7 +83,7 @@ export default function Footer() {
                     href={channel.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="navlink label inline-flex min-h-[32px] items-center text-ink-2 hover:text-ink"
+                    className="navlink label inline-flex min-h-11 items-center text-ink-2 hover:text-ink"
                   >
                     {channel.label}
                     <span className="sr-only">(opens in a new tab)</span>
@@ -99,7 +99,7 @@ export default function Footer() {
           <p className="label text-muted">
             © {year} {profile.fullName}
           </p>
-          <a href="#top" className="btn h-[40px] min-h-[40px]">
+          <a href="#top" className="btn">
             Back to top ↑
           </a>
         </div>
