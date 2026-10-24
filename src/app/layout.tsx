@@ -32,7 +32,6 @@ export const metadata: Metadata = {
   keywords: [
     profile.fullName,
     "web developer",
-    "student portal",
     "PHP developer",
     "Electron developer",
     "desktop application developer",

@@ -14,7 +14,7 @@ npm run lint     # eslint
 ## Editing the content
 
 **Every word on the page comes from [`src/lib/content.ts`](src/lib/content.ts).** Claims come from
-the résumé, or from Kennedy directly (Java, and student portals as a service). There are no
+the résumé, or from Kennedy directly (including Java). There are no
 invented awards, testimonials, client logos or skill percentages — keep it that way.
 
 | To change | Edit in `content.ts` |
@@ -23,14 +23,14 @@ invented awards, testimonials, client logos or skill percentages — keep it tha
 | Email, phone, LinkedIn, résumé link | `contact` |
 | Hero photo | `subject` (see below) |
 | Practice rows | `practice` |
-| **Services** (student portals, websites, …) | `services` |
+| **Services** (websites, desktop systems, workflow tools) | `services` |
 | **Stack tiles** (PHP, Java, HTML, CSS, …) | `stack` |
 | Projects in the work table | `work` |
 | About text, schools, certificate | `about`, `education`, `certificate` |
 | Closing line | `close` |
 
-A service only links to proof when a real shipped project exists (`proof`). Student portals
-currently say "Available to build" — if you've shipped one, add it to `work` and set its `proof`.
+A service only links to proof when a real shipped project exists (`proof`). Services without
+a linked project say "Available to build"; add the project to `work` before setting its `proof`.
 
 ## Still to do
 
@@ -39,9 +39,7 @@ currently say "Available to build" — if you've shipped one, add it to `work` a
    (on the page: **⋯ → Copy link**).
 2. **Telegram link.** Add `{ label: "Telegram", value: "@yourname", href: "https://t.me/yourname" }`
    to `contact.channels`.
-3. **Confirm the Student Portal details** in `work` — the stack (PHP, MySQL, …) and year
-   (2025 — 2026) aren't visible in the screenshot, so they're marked `TODO(confirm)`.
-4. **Add Java to your Word résumé** so it matches the web one.
+3. **Add Java to your Word résumé** so it matches the web one.
 
 ## Adding a project with a screenshot
 

@@ -30,12 +30,12 @@ export default function Services() {
             className="copy max-w-[40ch]"
             style={{ "--reveal-delay": "140ms" } as React.CSSProperties}
           >
-            From a school&apos;s student portal to a clinic&apos;s offline records —
-            software that replaces a paper process.
+            Business websites, offline records and workflow tools —
+            software that makes everyday work easier.
           </p>
         </div>
 
-        <ul className="mt-14 grid gap-5 md:grid-cols-2">
+        <ul className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {services.map((service, i) => (
             <li
               key={service.title}

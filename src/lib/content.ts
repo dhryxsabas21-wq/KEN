@@ -3,7 +3,7 @@
  *  SINGLE SOURCE OF TRUTH
  *
  *  Claims here come from Kennedy's résumé, or from Kennedy directly
- *  (Java, and student portals as a service). Nothing is invented —
+ *  (including Java). Nothing is invented —
  *  no awards, testimonials, client logos or proficiency scores.
  *  If you add something, make sure you can stand behind it in an
  *  interview.
@@ -27,7 +27,7 @@ export const profile = {
   },
 
   lede:
-    "Full-stack and desktop application developer based in Baler, Aurora. I build student portals, business websites and offline-first desktop systems in PHP, JavaScript, Electron and plain web standards.",
+    "Full-stack and desktop application developer based in Baler, Aurora. I build business websites and offline-first desktop systems in PHP, JavaScript, Electron and plain web standards.",
 
   /** Corner caption. Two unbreakable runs, so a narrow screen wraps
       between them rather than orphaning the "E". */
@@ -105,7 +105,7 @@ export const practice = {
     after: ", then online.",
   },
   lede:
-    "Most of my work is for small establishments, schools and a rural health facility. Connectivity is not a given, so data lives close to the user and the interface has to hold up on whatever machine is already on the desk.",
+    "Most of my work is for small establishments and a rural health facility. Connectivity is not a given, so data lives close to the user and the interface has to hold up on whatever machine is already on the desk.",
   rows: [
     {
       label: "Local-first",
@@ -156,15 +156,6 @@ export type Service = {
 export const services: Service[] = [
   {
     index: "01",
-    title: "Student portals",
-    summary:
-      "Web portals for schools: one login for students, faculty and the registrar, each seeing only what their role allows.",
-    includes: ["Enrolment & profiles", "Grades & schedules", "Announcements", "Role-based access"],
-    stack: ["PHP", "MySQL", "HTML", "CSS", "JavaScript"],
-    proof: { label: "the Lyceum portal", href: "#work" },
-  },
-  {
-    index: "02",
     title: "Business websites",
     summary:
       "Responsive sites for local establishments — what they offer, when they're open, where to find them, and how to get in touch.",
@@ -173,7 +164,7 @@ export const services: Service[] = [
     proof: { label: "Bella's Takoyaki", href: "#work" },
   },
   {
-    index: "03",
+    index: "02",
     title: "Desktop record systems",
     summary:
       "Offline-first desktop applications with a local database, for clinics and offices that can't depend on the internet.",
@@ -182,7 +173,7 @@ export const services: Service[] = [
     proof: { label: "MedSys", href: "#work" },
   },
   {
-    index: "04",
+    index: "03",
     title: "Admin & workflow tools",
     summary:
       "Small internal tools that replace spreadsheets and paper logs, so routine office work takes minutes instead of an afternoon.",
@@ -207,7 +198,7 @@ export const stack: Tech[] = [
   { name: "HTML5", mark: "Ht", category: "Markup", usedFor: "Every web project, from Bella's Takoyaki to the MedSys interface." },
   { name: "CSS3", mark: "Cs", category: "Styling", usedFor: "Responsive layouts that hold from 375px phones to 1440px desktops." },
   { name: "JavaScript", mark: "Js", category: "Language", usedFor: "Interactive interfaces on the web and inside Electron apps." },
-  { name: "PHP", mark: "Ph", category: "Back end", usedFor: "Server-side logic and database-backed web apps like student portals." },
+  { name: "PHP", mark: "Ph", category: "Back end", usedFor: "Server-side logic and database-backed web applications." },
   { name: "Java", mark: "Jv", category: "Language", usedFor: "Object-oriented programming and application development." },
   { name: "Node.js", mark: "No", category: "Runtime", usedFor: "Local file and database access for offline desktop apps." },
   { name: "Electron.js", mark: "El", category: "Desktop", usedFor: "MedSys and cross-platform desktop tools that run offline." },
@@ -241,38 +232,6 @@ export type WorkRow = {
 };
 
 export const work: WorkRow[] = [
-  {
-    name: "Student Portal",
-    client: "Lyceum of the East-Aurora",
-    role: "Full-stack",
-    // TODO(confirm): stack and year are not visible in the screenshot.
-    stack: "PHP, MySQL, HTML, CSS, JavaScript",
-    year: "2025 — 2026",
-    note:
-      "Registration and cashiering system for the Lyceum of the East-Aurora. Students register once, choose the subjects their curriculum lists for the term, see exactly how their fees were computed, and keep every Official Receipt on record — while the Office of the Registrar reviews every application.",
-    live: {
-      href: "https://leaportal.gt.tc/",
-      label: "leaportal.gt.tc",
-    },
-    featured: {
-      image: {
-        src: "/work/lyceum-student-portal.png",
-        width: 1353,
-        height: 632,
-        alt: "Lyceum of the East-Aurora student portal home page, headed 'Enroll, get assessed and pay, all in one place', with the enrollment period card showing 1st Semester, school year 2025–2026, enrollment open.",
-      },
-      chrome: "browser",
-      chromeTitle: "leaportal.gt.tc",
-      features: [
-        "Student registration & accounts",
-        "Registrar review of applications",
-        "Subject selection by curriculum",
-        "Fee assessment breakdown",
-        "Cashiering & Official Receipts",
-        "Enrollment periods per semester",
-      ],
-    },
-  },
   {
     name: "MedSys",
     client: "Dr. Andres Aragon Angara Health Center & Birthing Facility",
@@ -352,7 +311,7 @@ export const about = {
   },
   paragraphs: [
     "I came to software through the ICT track at senior high school and stayed for the parts that are unglamorous — data that has to be right, forms that replace paper, interfaces that have to work on whatever machine is already on the desk.",
-    "Electron is most of my desktop work because it puts a real database on a real machine without asking a clinic or a food stall to maintain a server. For anything many people share — a school's records, a portal — it's PHP and MySQL.",
+    "Electron is most of my desktop work because it puts a real database on a real machine without asking a clinic or a food stall to maintain a server. For shared records and web applications, it's PHP and MySQL.",
   ],
 };
 
@@ -389,5 +348,5 @@ export const close = {
     after: ".",
   },
   fineprint:
-    "Currently finishing a BS in Information Technology at ASCOT. Available for freelance and project-based work — portals, websites and desktop systems.",
+    "Currently finishing a BS in Information Technology at ASCOT. Available for freelance and project-based work — websites, web applications and desktop systems.",
 };
