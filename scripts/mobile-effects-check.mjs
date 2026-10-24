@@ -53,6 +53,7 @@ for (const [engine, browserType, launchOptions, profiles] of [
       });
       try {
         assert((await page.goto(base, { waitUntil: "networkidle" }))?.ok());
+        await page.locator(".entry-screen").waitFor({ state: "hidden" });
         await page.evaluate(() => document.fonts.ready);
         assert(await page.evaluate(() => matchMedia("(pointer: coarse)").matches), `${name}: touch input`);
         await place(page, ".hero-portrait", 0.7);

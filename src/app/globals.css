@@ -89,6 +89,60 @@
 /* ─────────────────────────── Components ─────────────────────────── */
 
 @layer components {
+  .entry-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: none;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: 20px;
+    padding: clamp(20px, 3vw, 40px);
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 44%, #34251d, var(--color-ground) 68%);
+    color: var(--color-ink);
+    transform: translateY(0);
+    transition: transform 520ms cubic-bezier(0.76, 0, 0.24, 1);
+  }
+  html.entry-active .entry-screen { display: grid; }
+  html.entry-active body { overflow: hidden; }
+  html.entry-leaving .entry-screen { transform: translateY(-101%); }
+  .entry-grid {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.35;
+    background-image: linear-gradient(#ede6da09 1px, transparent 1px), linear-gradient(90deg, #ede6da09 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse at center, black, transparent 70%);
+  }
+  .entry-topline, .entry-bottomline { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+  .entry-topline > .display { font-size: 28px; }
+  .entry-center { position: relative; align-self: center; justify-self: center; width: 100%; text-align: center; }
+  .entry-emblem { position: relative; display: grid; place-items: center; width: 128px; height: 128px; margin-inline: auto; perspective: 700px; }
+  .entry-emblem > .display { position: relative; padding-right: 5px; font-size: 76px; line-height: 1; animation: entry-mark 850ms var(--ease-out-soft) both; }
+  .entry-emblem-back { position: absolute; inset: 6px; border: 1px solid #e07a4b55; background: #e07a4b08; animation: entry-frame 1100ms var(--ease-out-soft) both; }
+  .entry-emblem svg { position: absolute; inset: 0; width: 100%; height: 100%; stroke: var(--color-pigment); stroke-width: 1.5; stroke-dasharray: 48; animation: entry-draw 950ms ease-out both; }
+  .entry-title { margin-top: 32px; font-size: clamp(40px, 5vw, 64px); line-height: 1.08; text-wrap: balance; }
+  .entry-status { margin-top: 24px; color: var(--color-ink-2); }
+  .entry-track { width: min(72vw, 300px); height: 2px; margin: 24px auto 0; overflow: hidden; background: var(--color-hair); }
+  .entry-track > span { display: block; width: 30%; height: 100%; background: var(--color-pigment); animation: entry-progress 1300ms ease-in-out infinite; }
+  .entry-skip { display: inline-flex; min-height: 44px; align-items: center; gap: 20px; border-bottom: 1px solid var(--color-hair); color: var(--color-ink-2); cursor: pointer; }
+  .entry-skip > span { color: var(--color-pigment); }
+  .entry-skip:hover { color: var(--color-ink); border-color: var(--color-pigment); }
+  @keyframes entry-progress { from { transform: translateX(-110%); } to { transform: translateX(440%); } }
+  @keyframes entry-draw { from { stroke-dashoffset: 48; opacity: 0.2; } to { stroke-dashoffset: 0; opacity: 1; } }
+  @keyframes entry-mark { from { opacity: 0; transform: translateY(10px) rotateX(-14deg); } to { opacity: 1; transform: none; } }
+  @keyframes entry-frame { from { opacity: 0; transform: rotate(9deg) rotateY(-20deg); } to { opacity: 1; transform: rotate(-6deg) rotateY(0); } }
+  @media (max-width: 639px) { .entry-bottom-detail { display: none; } .entry-topline > .label { font-size: 11px; letter-spacing: 0.04em; } }
+  @media (max-height: 480px) {
+    .entry-screen { gap: 10px; padding: 16px 24px; }
+    .entry-emblem { width: 64px; height: 64px; }
+    .entry-emblem > .display { font-size: 42px; }
+    .entry-title { margin-top: 16px; font-size: 36px; }
+    .entry-status { margin-top: 14px; }
+    .entry-track { margin-top: 16px; }
+  }
+
   .display {
     font-family: var(--font-display);
     font-weight: 400;
@@ -651,6 +705,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .entry-screen { display: none !important; }
+  html.entry-active body { overflow: visible; }
   .paper-field {
     display: none;
   }
@@ -673,4 +729,9 @@
   .worktable tr:has(:focus-visible) .lift {
     transform: none;
   }
+}
+
+@media print {
+  .entry-screen { display: none !important; }
+  html.entry-active body { overflow: visible; }
 }

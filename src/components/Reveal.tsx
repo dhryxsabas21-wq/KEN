@@ -38,10 +38,9 @@ export default function Reveal() {
 
     const show = (el: Element) => el.setAttribute("data-shown", "true");
 
-    const eager = Array.from(
+    let eager = Array.from(
       document.querySelectorAll<HTMLElement>("[data-reveal][data-eager]"),
     );
-    const raf = requestAnimationFrame(() => eager.forEach(show));
 
     let pending = Array.from(
       document.querySelectorAll<HTMLElement>("[data-reveal]:not([data-eager])"),
@@ -51,6 +50,9 @@ export default function Reveal() {
 
     const check = () => {
       frame = 0;
+      if (root.classList.contains("entry-active")) return;
+      eager.forEach(show);
+      eager = [];
       // The line a block's top must cross: 8% above the bottom edge.
       const viewport = window.visualViewport;
       const line = (viewport?.offsetTop ?? 0) + (viewport?.height ?? window.innerHeight) * 0.92;
@@ -76,16 +78,17 @@ export default function Reveal() {
       window.removeEventListener("resize", onScroll);
       window.visualViewport?.removeEventListener("resize", onScroll);
       window.removeEventListener("pageshow", onScroll);
+      window.removeEventListener("portfolio:entry-complete", onScroll);
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll, { passive: true });
     window.visualViewport?.addEventListener("resize", onScroll, { passive: true });
     window.addEventListener("pageshow", onScroll);
+    window.addEventListener("portfolio:entry-complete", onScroll);
     const raf2 = requestAnimationFrame(check);
 
     return () => {
-      cancelAnimationFrame(raf);
       cancelAnimationFrame(raf2);
       if (frame) cancelAnimationFrame(frame);
       detach();

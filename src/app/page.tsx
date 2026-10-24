@@ -8,10 +8,14 @@ import Reveal from "@/components/Reveal";
 import Services from "@/components/Services";
 import Stack from "@/components/Stack";
 import Work from "@/components/Work";
+import EntryLoader from "@/components/EntryLoader";
 
 export default function Home() {
   return (
     <>
+      <EntryLoader />
+      {/* The bootstrap can set inert/aria-busy before hydration. */}
+      <div id="portfolio-content" suppressHydrationWarning>
       <Reveal />
       <Nav />
 
@@ -29,6 +33,7 @@ export default function Home() {
 
       {/* Outside <main>, so it is the page's footer landmark */}
       <Footer />
+      </div>
     </>
   );
 }

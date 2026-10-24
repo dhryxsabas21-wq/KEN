@@ -18,6 +18,7 @@ try {
     await page.setViewportSize({ width, height: 960 });
     const response = await page.goto(base, { waitUntil: "networkidle" });
     assert(response?.ok(), `Home failed at ${width}px`);
+    await page.locator(".entry-screen").waitFor({ state: "hidden" });
     await page.evaluate(() => document.fonts.ready);
     await page.locator(".portrait-img").waitFor({ state: "visible" });
     await page.waitForTimeout(1400);
@@ -43,6 +44,7 @@ try {
   }
   await page.setViewportSize({ width: 1440, height: 960 });
   await page.goto(base, { waitUntil: "networkidle" });
+  await page.locator(".entry-screen").waitFor({ state: "hidden" });
   await page.waitForTimeout(1500);
   const portrait = page.locator(".hero-portrait");
   const box = await portrait.boundingBox();

@@ -111,6 +111,28 @@ All clear WCAG AA. **If you change a colour, re-check its contrast** — dark th
 
 ## The 3D
 
+### Entry loading screen
+
+The first home-page visit in a browser tab shows a framed KP mark, an indeterminate
+copper loading line, and a curtain transition. The page waits briefly for its fonts
+and portrait; it does not display invented loading percentages.
+
+- Skip with the visible button, Enter, or Escape. The button and Escape also work
+  before React hydrates.
+- Reduced motion, disabled JavaScript, direct résumé visits, and section deep links
+  bypass the intro. Subsequent home visits in the same tab skip it when session storage
+  is available.
+- A slow asset is bounded by an 1800ms readiness deadline; a separate 3500ms bootstrap
+  timeout releases the page if hydration fails.
+- The page is inert only while the intro is active. Hero reveals begin after it exits.
+
+Run the loading and fallback checks in Chromium and WebKit:
+
+```powershell
+$env:PLAYWRIGHT_BROWSERS_PATH = Join-Path (Get-Location) '.preview/browsers'
+node scripts/loading-check.mjs http://127.0.0.1:3300
+```
+
 | Where | What | File |
 | --- | --- | --- |
 | Hero background | WebGL field of paper forms, lit and fogged, turning toward the pointer and flying at you on scroll | [`PaperField.tsx`](src/components/PaperField.tsx) |

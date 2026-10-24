@@ -74,6 +74,30 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
     >
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{
+              var r=document.documentElement;
+              if(location.pathname!=='/'||location.hash||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+              try{if(sessionStorage.getItem('pronto:entry-seen'))return}catch(e){}
+              function lock(){var s=document.getElementById('portfolio-content');if(s&&r.classList.contains('entry-active')){s.inert=true;s.setAttribute('aria-busy','true')}}
+              function cleanup(){document.removeEventListener('DOMContentLoaded',lock);document.removeEventListener('keydown',key);document.removeEventListener('click',click);window.removeEventListener('portfolio:entry-complete',cleanup)}
+              function unlock(){
+                clearTimeout(window.__entryFailsafe);cleanup();r.classList.remove('entry-active','entry-leaving');
+                var s=document.getElementById('portfolio-content');if(s){s.inert=false;s.removeAttribute('aria-busy')}
+                try{sessionStorage.setItem('pronto:entry-seen','1')}catch(e){}
+                dispatchEvent(new Event('portfolio:entry-complete'));
+              }
+              function key(e){if(e.key==='Escape')unlock()}
+              function click(e){if(e.target instanceof Element&&e.target.closest('[data-entry-skip]'))unlock()}
+              r.classList.add('entry-active');
+              if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',lock,{once:true});else lock();
+              document.addEventListener('keydown',key);document.addEventListener('click',click);
+              window.addEventListener('portfolio:entry-complete',cleanup,{once:true});
+              window.__entryFailsafe=setTimeout(unlock,3500);
+            }catch(e){}})()`,
+          }}
+        />
         {/*
           Decide about motion before first paint, so reveal blocks are
           never visible-then-hidden. The failsafe timer means a broken
